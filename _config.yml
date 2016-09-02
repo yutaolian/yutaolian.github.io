@@ -11,8 +11,8 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: ""
-root: /yutaolian
+url: "http://yutaolian.github.io/"
+root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 
@@ -59,8 +59,8 @@ ga_domain: huangxuan.me
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Just do IT!"
-sidebar-avatar: /img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
+sidebar-about-description: "Just do IT"
+sidebar-avatar: img/avatar.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
 # Featured Tags
@@ -131,7 +131,7 @@ theme: huxblog
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type: 
-  repo: 
-  branch: 
+deploy: 
+  type: git
+  repo: https://github.com/yutaolian/yutaolian.github.io.git
+  branch: master
