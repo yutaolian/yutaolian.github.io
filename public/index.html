@@ -50,6 +50,17 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+    <!-- 百度统计 -->
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?830ad91a51e0e337b9837575ef8aa04f";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
 </head>
 
 
@@ -97,14 +108,14 @@
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
@@ -184,12 +195,37 @@
 
 <div class="post-preview">
 
+    <a href="/2016/09/10/Test/">
+        <h2 class="post-title">
+            Example Post using Keynote Layout
+        </h2>
+        <h3 class="post-subtitle">
+            Keynote: JavaScript Modularization Journey
+        </h3>
+        <div class="post-content-preview">
+            
+下滑这里查看更多内容
+
+7月9日，我在公司内部进行了名为「JavaScript 模块化七日谈」分享，并将该 Slides 分享到了微博上。出乎意料地，这篇微博先后被 @JS小组 @尤小右 @寸志 等近 200 人转发，阅读达到 10w，获得了还不错的评价。
+于是，我决定将它重新发到我的博客上，并为它专门制作了适用于 Keynote 展示文稿的新布局。它能自动根据屏幕大小/旋转以一定比例填充......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Hux on
+        2016-09-10
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2016/09/02/Java源码分析-三-HashSet/">
         <h2 class="post-title">
             Java源码分析(三)-HashSet
         </h2>
         <h3 class="post-subtitle">
-            
+            Keynote: JavaScript Modularization Journey
         </h3>
         <div class="post-content-preview">
             @(示例笔记本)[马克飞象|帮助|Markdown]
@@ -284,13 +320,17 @@
                     <div class="tags">
                         
                             
+                        
+                            
+                            <a href="/tags/#ArrayList" title="ArrayList" rel="2">ArrayList</a>
+                            
+                        
+                            
                             <a href="/tags/#Java" title="Java" rel="2">Java</a>
                             
                         
                             
                         
-                            
-                            <a href="/tags/#ArrayList" title="ArrayList" rel="2">ArrayList</a>
                             
                         
                     </div>
@@ -298,12 +338,12 @@
                 
 
                 <!-- Short About -->
-                <section class="visible-md visible-lg">111
+                <section class="visible-md visible-lg">
                     <hr><h5><a href="/about/">ABOUT ME</a></h5>
                     <div class="short-about">
 
                         
-                            <img src="//img/avatar.jpg" />
+                            <img src="/img/avatar.jpg" />
                         
 
                         
@@ -487,39 +527,9 @@
 <!-- Google Analytics -->
 
 
-<script>
-    // dynamic User by Hux
-    var _gaId = 'UA-49627206-1';
-    var _gaDomain = 'huangxuan.me';
-
-    // Originial
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', _gaId, _gaDomain);
-    ga('send', 'pageview');
-</script>
-
-
 
 
 <!-- Baidu Tongji -->
-
-<script>
-    // dynamic User by Hux
-    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
-
-    // Originial
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?" + _baId;
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-</script>
 
 
 <!-- Side Catalog -->

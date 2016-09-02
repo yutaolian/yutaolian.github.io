@@ -1,6 +1,9 @@
 ---
+ 
 title: Java源码分析(三)-HashSet
 date: 2016-09-02 17:03:49
+subtitle:   "Keynote: JavaScript Modularization Journey"
+header-img: "/img/home-bg-o.jpg"
 tags:
  - HashSet
  - ArrayList
@@ -16,7 +19,3 @@ tags:
 - **功能丰富** ：支持高亮代码块、*LaTeX* 公式、流程图，本地图片以及附件上传，甚至截图粘贴，工作学习好帮手；
 - **得心应手** ：简洁高效的编辑器，提供[桌面客户端][1]以及[离线Chrome App][2]，支持移动端 Web；
 - **深度整合** ：支持选择笔记本和添加标签，支持从印象笔记跳转编辑，轻松管理。
-
--------------------
-
-<lyt>

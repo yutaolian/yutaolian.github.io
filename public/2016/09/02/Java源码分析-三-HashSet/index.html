@@ -50,6 +50,17 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+    <!-- 百度统计 -->
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?830ad91a51e0e337b9837575ef8aa04f";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
 </head>
 
 
@@ -97,14 +108,14 @@
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
@@ -155,7 +166,7 @@
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
-        background-image: url('/img/home-bg.jpg')
+        background-image: url('/img/home-bg-o.jpg')
     }
 </style>
 <header class="intro-header" >
@@ -171,7 +182,7 @@
                         
                     </div>
                     <h1>Java源码分析(三)-HashSet</h1>
-                    <h2 class="subheading"></h2>
+                    <h2 class="subheading">Keynote: JavaScript Modularization Journey</h2>
                     <span class="meta">
                         Posted by Lian YuTao on
                         2016-09-02
@@ -200,15 +211,41 @@
 <li><strong>得心应手</strong> ：简洁高效的编辑器，提供[桌面客户端][1]以及[离线Chrome App][2]，支持移动端 Web；</li>
 <li><strong>深度整合</strong> ：支持选择笔记本和添加标签，支持从印象笔记跳转编辑，轻松管理。</li>
 </ul>
-<hr>
-<lyt>
-</lyt>
+
 
                 <hr>
 
                 
+                <!-- 多说 Share start -->
+                </style>
+                <div class="ds-share"
+                    style="text-align: right"
+                    data-thread-key="2016/09/02/Java源码分析-三-HashSet/"
+                    data-title="Java源码分析(三)-HashSet"
+                    data-url="http://yutaolian.github.io/2016/09/02/Java源码分析-三-HashSet/"
+                    data-images="http://yutaolian.github.io/2016/09/02/Java源码分析-三-HashSet//img/home-bg-o.jpg"
+                    data-content="@(示例笔记本)[马克飞象|帮助|Markdown]
+马克飞象是一款专为印象笔记（Everno... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
+                    <div class="ds-share-inline">
+                      <ul  class="ds-share-icons-16">
+                        <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
+                        <li><a class="ds-wechat flat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+                        <li><a class="ds-weibo flat" href="javascript:void(0);" data-service="weibo">微博</a></li>
+                        <li><a class="ds-douban flat" href="javascript:void(0);" data-service="douban">豆瓣</a></li>
+                      </ul>
+                      <div class="ds-share-icons-more">
+                      </div>
+                    </div>
+                <hr>
+                </div>
+                <!-- 多说 Share end-->
+                
 
                 <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2016/09/10/Test/" data-toggle="tooltip" data-placement="top" title="Example Post using Keynote Layout">&larr; Previous Post</a>
+                        </li>
                     
                     
                         <li class="next">
@@ -218,13 +255,17 @@
                 </ul>
 
                 
-
-                
-                <!-- disqus 评论框 start -->
+                <!-- 多说评论框 start -->
                 <div class="comment">
-                    <div id="disqus_thread" class="disqus-thread"></div>
+                    <div class="ds-thread"
+                        data-thread-key="2016/09/02/Java源码分析-三-HashSet/"
+                        data-title="Java源码分析(三)-HashSet"
+                        data-url="http://yutaolian.github.io/2016/09/02/Java源码分析-三-HashSet/" >
+                    </div>
                 </div>
-                <!-- disqus 评论框 end -->
+                <!-- 多说评论框 end -->
+                
+
                 
 
             </div>
@@ -271,22 +312,25 @@
 </article>
 
 
-
-
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "yutaolian";
-    var disqus_identifier = "http://yutaolian.github.io/2016/09/02/Java源码分析-三-HashSet/";
-    var disqus_url = "http://yutaolian.github.io/2016/09/02/Java源码分析-三-HashSet/";
+    // dynamic User by Hux
+    var _user = 'yutaolian';
 
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user };
     (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
     })();
 </script>
-<!-- disqus 公共JS代码 end -->
+<!-- 多说公共JS代码 end -->
+
+
 
 
 
@@ -451,39 +495,9 @@
 <!-- Google Analytics -->
 
 
-<script>
-    // dynamic User by Hux
-    var _gaId = 'UA-49627206-1';
-    var _gaDomain = 'huangxuan.me';
-
-    // Originial
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-    ga('create', _gaId, _gaDomain);
-    ga('send', 'pageview');
-</script>
-
-
 
 
 <!-- Baidu Tongji -->
-
-<script>
-    // dynamic User by Hux
-    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
-
-    // Originial
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?" + _baId;
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-</script>
 
 
 <!-- Side Catalog -->
