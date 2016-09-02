@@ -90,6 +90,13 @@
 
                         
                         <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
                             <a href="/archives/">Archives</a>
                         </li>
                         
@@ -98,13 +105,6 @@
                         
                         <li>
                             <a href="/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
-                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -155,31 +155,42 @@
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
-        background-image: url('/img/home-bg.jpg')
+        /*background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')*/
+        height: 500px;
+        overflow: hidden;
+    }
+    header iframe{
+        width: 100%;
+        height: 100%;
+        border: 0;
     }
 </style>
 <header class="intro-header" >
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <div class="post-heading">
-                    <div class="tags">
-                        
-                          <a class="tag" href="/tags/#HashSet" title="HashSet">HashSet</a>
-                        
-                          <a class="tag" href="/tags/#ArrayList" title="ArrayList">ArrayList</a>
+    <iframe src="http://huangxuan.me/js-module-7day/"/>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/HashSet/" title="HashSet">HashSet</a>
+                            
+                              <a class="tag" href="/tags/ArrayList/" title="ArrayList">ArrayList</a>
+                            
+                        </div>
+
+                        <h1>Java源码分析(三)-HashSet</h1>
+                        <h2 class="subheading">Keynote: JavaScript Modularization Journey</h2>
+                        <span class="meta">
+                            Posted by Lian YuTao on
+                            2016-09-02
+                        </span>
                         
                     </div>
-                    <h1>Java源码分析(三)-HashSet</h1>
-                    <h2 class="subheading"></h2>
-                    <span class="meta">
-                        Posted by Lian YuTao on
-                        2016-09-02
-                    </span>
                 </div>
             </div>
         </div>
-    </div>
+    </iframe>
 </header>
 
 <!-- Post Content -->
@@ -214,7 +225,7 @@
                     data-thread-key="2016/09/02/Java源码分析-三-HashSet/"
                     data-title="Java源码分析(三)-HashSet"
                     data-url="http://yutaolian.github.io/2016/09/02/Java源码分析-三-HashSet/"
-                    data-images=""
+                    data-images="http://yutaolian.github.io/img/home-bg.jpg"
                     data-content="@(示例笔记本)[马克飞象|帮助|Markdown]
 马克飞象是一款专为印象笔记（Everno... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
                     <div class="ds-share-inline">
@@ -236,7 +247,7 @@
                     
                     
                         <li class="next">
-                            <a href="/2016/09/02/Java源码分析-二-ArrayList/" data-toggle="tooltip" data-placement="top" title="Java源码分析(二)-ArrayList">Next Post &rarr;</a>
+                            <a href="/" data-toggle="tooltip" data-placement="top" title="Java源码分析(二)-ArrayList">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -256,8 +267,6 @@
                 
 
             </div>
-    <!-- Side Catalog Container -->
-        
 
     <!-- Sidebar Container -->
 
@@ -272,11 +281,7 @@
                     <!-- no hr -->
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                       
-                          <a class="tag" href="/tags/#HashSet" title="HashSet">HashSet</a>
-                        
-                          <a class="tag" href="/tags/#ArrayList" title="ArrayList">ArrayList</a>
-                        
+                        <a class="tag-link" href="/tags/ArrayList/">ArrayList</a><a class="tag-link" href="/tags/HashSet/">HashSet</a><a class="tag-link" href="/tags/Java/">Java</a><a class="tag-link" href="/tags/JavaScript/">JavaScript</a><a class="tag-link" href="/tags/前端开发/">前端开发</a>
                     </div>
                 </section>
                 
@@ -288,7 +293,7 @@
                 <ul class="list-inline">
 
                     
-                        <li><a href="http://blog.kaijun.rocks" target="_blank">阿浩</a></li>
+                        <li><a href="http://blog.kaijun.rocks">阿浩</a></li>
                     
                 </ul>
                 
