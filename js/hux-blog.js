@@ -63,10 +63,3 @@ jQuery(document).ready(function($) {
             });
     }
 });
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?830ad91a51e0e337b9837575ef8aa04f";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
