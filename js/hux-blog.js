@@ -63,7 +63,10 @@ jQuery(document).ready(function($) {
             });
     }
 });
-<!-- yutaolian.github.io Baidu tongji analytics -->
-var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
-document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F830ad91a51e0e337b9837575ef8aa04f' type='text/javascript'%3E%3C/script%3E"));
-
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?830ad91a51e0e337b9837575ef8aa04f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
