@@ -108,14 +108,14 @@
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
@@ -204,29 +204,14 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>##0.什么是内部类</p>
+                <p>###0.什么是内部类</p>
 <blockquote>
 <p>可以将一个类的定义放在另一个类的内部，这就是内部类。-《Java编程思想》</p>
 </blockquote>
 <p><strong>让我们先来看一段代码</strong></p>
-<pre><code>public class InnerClassTest {
-    //定义内部类    
-      public class InnerClass{
-         public void innerMethod(){
-            System.out.println(&quot;this is a inner class method&quot;);
-        }
-     }
-
-     public static void main(String[] args) {
-
-        InnerClassTest innerClassTest = new InnerClassTest();
-        //创建内部类
-        InnerClass innerClass = innerClassTest.new InnerClass();
-        innerClass.innerMethod();    
-     }
- }
-</code></pre><p> 上面的代码简单展示了内部类的定义和使用，<br> 我们可以查看编译后的文件<br> <img src="/img/innerclass/innerclass01.png" alt=""></p>
-<p>##1.内部类的种类</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">InnerClassTest</span> &#123;</div><div class="line">	</div><div class="line">	<span class="keyword">public</span> <span class="keyword">class</span> <span class="title">InnerClass</span>&#123;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">innerMethod</span>(<span class="params"></span>)</span>&#123;</div><div class="line">			System.<span class="keyword">out</span>.println(<span class="string">"this is a inner class method"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</div><div class="line">		</div><div class="line">		InnerClassTest innerClassTest = <span class="keyword">new</span> InnerClassTest();</div><div class="line">		InnerClass innerClass = innerClassTest.new InnerClass();</div><div class="line">		innerClass.innerMethod();	</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p> 上面的代码简单展示了内部类的定义和使用，<br> 我们可以查看编译后的文件<br> <img src="/img/innerclass/innerclass01.png" alt=""></p>
+<p>###1.内部类的种类</p>
 <p>###</p>
 
 
@@ -241,9 +226,9 @@
                     data-title="Java内部类详解"
                     data-url="http://yutaolian.github.io/2016/09/03/Java内部类详解/"
                     data-images=""
-                    data-content="##0.什么是内部类
+                    data-content="###0.什么是内部类
 
-可以将一个类的定义放在另一个类的内部，这就是内部类。-《Java编程思... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
+可以将一个类的定义放在另一个类的内部，这就是内部类。-《Java编程... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
                     <div class="ds-share-inline">
                       <ul  class="ds-share-icons-16">
                         <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
@@ -319,7 +304,7 @@
                 <ul class="list-inline">
 
                     
-                        <li><a href="http://blog.kaijun.rocks" target="_blank">阿浩</a></li>
+                        <li><a href="http://howeguo.github.io/" target="_blank">阿浩</a></li>
                     
                 </ul>
                 
