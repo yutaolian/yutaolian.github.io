@@ -202,7 +202,55 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h1 id="I-love-Java"><a href="#I-love-Java" class="headerlink" title="I love Java"></a>I love Java</h1>
+                <p>HashMap 在java集合中来说算是比较重要的一个类了。其源码也是在面试过程中经常被问的一道面试题。之前自己也大略的看过，现在抱着一起学习的态度，分析一下HashMap的源码。</p>
+<h3 id="0-所处位置"><a href="#0-所处位置" class="headerlink" title="0. 所处位置"></a>0. 所处位置</h3><p>学过Java集合的人都应该看过张图(《Java编程思想》关于容器类库的简介图)<br> <img src="/img/java/collection.png" alt=""></p>
+<h3 id="1-构造方法"><a href="#1-构造方法" class="headerlink" title="1. 构造方法"></a>1. 构造方法</h3><p>个人认为学习一个类，应该先看其构造方法搞明白构造方法页面搞清楚了一半</p>
+<pre><code>  public HashMap(int initialCapacity, float loadFactor) {
+    if (initialCapacity &lt; 0)
+        throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
+                                           initialCapacity);
+    if (initialCapacity &gt; MAXIMUM_CAPACITY)
+        initialCapacity = MAXIMUM_CAPACITY;
+    if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
+        throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
+                                           loadFactor);
+    this.loadFactor = loadFactor;
+    this.threshold = tableSizeFor(initialCapacity);
+}
+
+/**
+ * Constructs an empty &lt;tt&gt;HashMap&lt;/tt&gt; with the specified initial
+ * capacity and the default load factor (0.75).
+ *
+ * @param  initialCapacity the initial capacity.
+ * @throws IllegalArgumentException if the initial capacity is negative.
+ */
+public HashMap(int initialCapacity) {
+    this(initialCapacity, DEFAULT_LOAD_FACTOR);
+}
+
+/**
+ * Constructs an empty &lt;tt&gt;HashMap&lt;/tt&gt; with the default initial capacity
+ * (16) and the default load factor (0.75).
+ */
+public HashMap() {
+    this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
+}
+
+/**
+ * Constructs a new &lt;tt&gt;HashMap&lt;/tt&gt; with the same mappings as the
+ * specified &lt;tt&gt;Map&lt;/tt&gt;.  The &lt;tt&gt;HashMap&lt;/tt&gt; is created with
+ * default load factor (0.75) and an initial capacity sufficient to
+ * hold the mappings in the specified &lt;tt&gt;Map&lt;/tt&gt;.
+ *
+ * @param   m the map whose mappings are to be placed in this map
+ * @throws  NullPointerException if the specified map is null
+ */
+public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
+    this.loadFactor = DEFAULT_LOAD_FACTOR;
+    putMapEntries(m, false);
+}
+</code></pre>
 
                 <hr>
 
@@ -215,7 +263,7 @@
                     data-title="Java源码分析(一)-HashMap"
                     data-url="http://yutaolian.github.io/2016/09/02/Java源码分析-一-HashMap/"
                     data-images=""
-                    data-content="I love Java | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
+                    data-content="HashMap 在java集合中来说算是比较重要的一个类了。其源码也是在面试过程中经常被问的一... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
                     <div class="ds-share-inline">
                       <ul  class="ds-share-icons-16">
                         <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
@@ -237,6 +285,10 @@
                             <a href="/2016/09/02/Java源码分析-二-ArrayList/" data-toggle="tooltip" data-placement="top" title="Java源码分析(二)-ArrayList">&larr; Previous Post</a>
                         </li>
                     
+                    
+                        <li class="next">
+                            <a href="/2016/09/01/读书/" data-toggle="tooltip" data-placement="top" title="读书">Next Post &rarr;</a>
+                        </li>
                     
                 </ul>
 
