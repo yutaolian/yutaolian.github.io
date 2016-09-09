@@ -101,7 +101,7 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -115,7 +115,7 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -210,7 +210,13 @@
 <p><strong>让我们先来看一段代码</strong></p>
 <figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">InnerClassTest</span> &#123;</div><div class="line">	</div><div class="line">	<span class="keyword">public</span> <span class="keyword">class</span> <span class="title">InnerClass</span>&#123;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">innerMethod</span>(<span class="params"></span>)</span>&#123;</div><div class="line">			System.<span class="keyword">out</span>.println(<span class="string">"this is a inner class method"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</div><div class="line">		</div><div class="line">		InnerClassTest innerClassTest = <span class="keyword">new</span> InnerClassTest();</div><div class="line">		InnerClass innerClass = innerClassTest.new InnerClass();</div><div class="line">		innerClass.innerMethod();	</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p> 上面的代码简单展示了内部类的定义和使用，<br> 我们可以查看编译后的文件<br> <img src="/img/innerclass/innerclass01.png" alt=""></p>
-<h2 id="1-内部类的种类"><a href="#1-内部类的种类" class="headerlink" title="1.内部类的种类"></a>1.内部类的种类</h2><p>###</p>
+<h2 id="1-内部类的种类"><a href="#1-内部类的种类" class="headerlink" title="1.内部类的种类"></a>1.内部类的种类</h2><p>######一般内部类可分为四种：</p>
+<ul>
+<li>成员内部类</li>
+<li>局部内部类</li>
+<li>嵌套内部类</li>
+<li>匿名内部类</li>
+</ul>
 
 
                 <hr>
