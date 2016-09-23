@@ -13,11 +13,11 @@
 
     <title>
         
-          Java内部类详解 - YuTaoLian的博客 | YuTaoLian&#39;s Blog
+          算法(二):实现一个getMin功能的栈 - YuTaoLian的博客 | YuTaoLian&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http://yutaolian.github.io/2016/09/03/Java内部类详解/">
+    <link rel="canonical" href="http://yutaolian.github.io/2016/09/10/算法-二-实现一个getMin功能的栈/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -176,16 +176,18 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                          <a class="tag" href="/tags/#算法" title="算法">算法</a>
                         
-                          <a class="tag" href="/tags/#Java内部类" title="Java内部类">Java内部类</a>
+                          <a class="tag" href="/tags/#Stack" title="Stack">Stack</a>
+                        
+                          <a class="tag" href="/tags/#栈" title="栈">栈</a>
                         
                     </div>
-                    <h1>Java内部类详解</h1>
+                    <h1>算法(二):实现一个getMin功能的栈</h1>
                     <h2 class="subheading"></h2>
                     <span class="meta">
                         Posted by Lian YuTao on
-                        2016-09-03
+                        2016-09-10
                     </span>
                 </div>
             </div>
@@ -204,19 +206,12 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h2 id="0-什么是内部类"><a href="#0-什么是内部类" class="headerlink" title="0.什么是内部类"></a>0.什么是内部类</h2><blockquote>
-<p>可以将一个类的定义放在另一个类的内部，这就是内部类。-《Java编程思想》</p>
+                <blockquote>
+<p>题目:<br>在Stack的基础上实现一个可以获得Stack的最小元素的方法（getMin）,要求pop,push,getMin操作的时间复杂度是o(1)</p>
 </blockquote>
-<p><strong>让我们先来看一段代码</strong></p>
-<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">InnerClassTest</span> &#123;</div><div class="line">	</div><div class="line">	<span class="keyword">public</span> <span class="keyword">class</span> <span class="title">InnerClass</span>&#123;</div><div class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">innerMethod</span>(<span class="params"></span>)</span>&#123;</div><div class="line">			System.<span class="keyword">out</span>.println(<span class="string">"this is a inner class method"</span>);</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) </span>&#123;</div><div class="line">		</div><div class="line">		InnerClassTest innerClassTest = <span class="keyword">new</span> InnerClassTest();</div><div class="line">		InnerClass innerClass = innerClassTest.new InnerClass();</div><div class="line">		innerClass.innerMethod();	</div><div class="line">	&#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p> 上面的代码简单展示了内部类的定义和使用，<br> 我们可以查看编译后的文件<br> <img src="/img/innerclass/innerclass01.png" alt=""></p>
-<h2 id="1-内部类的种类"><a href="#1-内部类的种类" class="headerlink" title="1.内部类的种类"></a>1.内部类的种类</h2><p>######一般内部类可分为四种：</p>
-<ul>
-<li>成员内部类</li>
-<li>局部内部类</li>
-<li>嵌套内部类</li>
-<li>匿名内部类</li>
-</ul>
+<p>题目来源《程序员代码面试指南》作者：左程云</p>
+<h3 id="0-分析"><a href="#0-分析" class="headerlink" title="0.分析"></a>0.分析</h3><p>题目要求时间复杂度为o(1),即可以直接获得Stack的最小元素，我们可以使用两个栈，一个栈（StackData）存储全部元素，一个栈(StackMin)来存储最小元素（其实不是一个最小元素，应该是比第一个压入StackData栈的小的所有元素），getMin即获得StackMin栈的栈顶元素，需要注意的就是在push和pop时都需要和StackMin栈的栈顶做比较,如果出栈的数据与StackMin栈顶元素相同那么StackMin也需要pop数据。<br>如图<br><img src="/img/stack/getMinStack.png" alt=""></p>
+<h3 id="1-代码"><a href="#1-代码" class="headerlink" title="1.代码"></a>1.代码</h3><figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">import java.util.Stack;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MinSatck</span> &#123;</div><div class="line">	</div><div class="line">	<span class="keyword">private</span> Stack&lt;Integer&gt; stackData;</div><div class="line">	<span class="keyword">private</span> Stack&lt;Integer&gt; stackMin;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="title">MinSatck</span>(<span class="params"></span>) </span>&#123;</div><div class="line"></div><div class="line">		<span class="keyword">this</span>.stackData = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line">		<span class="keyword">this</span>.stackMin = <span class="keyword">new</span> Stack&lt;&gt;();</div><div class="line">	&#125;</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span>(<span class="params"><span class="keyword">int</span> item</span>)</span>&#123;</div><div class="line">		</div><div class="line">		<span class="keyword">if</span> (stackMin.isEmpty()) &#123;</div><div class="line">			stackMin.push(item);</div><div class="line">		&#125;<span class="function"><span class="keyword">else</span> <span class="title">if</span> (<span class="params">item &lt;= getMin(</span>)) </span>&#123;</div><div class="line">			stackMin.push(item);</div><div class="line">		&#125;	</div><div class="line">		</div><div class="line">		stackData.push(item);</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">pop</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="keyword">if</span> (stackData.isEmpty()) &#123;</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"stack is empty"</span>);</div><div class="line">		&#125;<span class="keyword">else</span>&#123;</div><div class="line">			<span class="keyword">int</span> <span class="keyword">value</span> = stackData.pop();</div><div class="line">			<span class="keyword">if</span> (<span class="keyword">value</span> == getMin()) &#123;</div><div class="line">				stackMin.pop();</div><div class="line">			&#125;</div><div class="line">			<span class="keyword">return</span> <span class="keyword">value</span>;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMin</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		<span class="keyword">if</span> (stackMin.isEmpty()) &#123;</div><div class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">"stack is empty"</span>);</div><div class="line">		&#125;</div><div class="line">		<span class="keyword">return</span> stackMin.peek();</div><div class="line">	&#125;</div><div class="line">	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
 
                 <hr>
@@ -226,13 +221,12 @@
                 </style>
                 <div class="ds-share"
                     style="text-align: right"
-                    data-thread-key="2016/09/03/Java内部类详解/"
-                    data-title="Java内部类详解"
-                    data-url="http://yutaolian.github.io/2016/09/03/Java内部类详解/"
+                    data-thread-key="2016/09/10/算法-二-实现一个getMin功能的栈/"
+                    data-title="算法(二):实现一个getMin功能的栈"
+                    data-url="http://yutaolian.github.io/2016/09/10/算法-二-实现一个getMin功能的栈/"
                     data-images=""
-                    data-content="0.什么是内部类
-可以将一个类的定义放在另一个类的内部，这就是内部类。-《Java编程思想》
-... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
+                    data-content="
+题目:在Stack的基础上实现一个可以获得Stack的最小元素的方法（getMin）,要求p... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
                     <div class="ds-share-inline">
                       <ul  class="ds-share-icons-16">
                         <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
@@ -251,12 +245,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2016/09/10/算法-一-Stack-栈-的实现/" data-toggle="tooltip" data-placement="top" title="算法(一):Stack(栈)的实现">&larr; Previous Post</a>
+                            <a href="/2016/09/12/算法-三-常用数据结构的定义/" data-toggle="tooltip" data-placement="top" title="算法(三)-常用数据结构的定义">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2016/09/02/Java源码分析-三-HashSet/" data-toggle="tooltip" data-placement="top" title="Java源码分析(三)-HashSet">Next Post &rarr;</a>
+                            <a href="/2016/09/10/算法-一-Stack-栈-的实现/" data-toggle="tooltip" data-placement="top" title="算法(一):Stack(栈)的实现">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -265,9 +259,9 @@
                 <!-- 多说评论框 start -->
                 <div class="comment">
                     <div class="ds-thread"
-                        data-thread-key="2016/09/03/Java内部类详解/"
-                        data-title="Java内部类详解"
-                        data-url="http://yutaolian.github.io/2016/09/03/Java内部类详解/" >
+                        data-thread-key="2016/09/10/算法-二-实现一个getMin功能的栈/"
+                        data-title="算法(二):实现一个getMin功能的栈"
+                        data-url="http://yutaolian.github.io/2016/09/10/算法-二-实现一个getMin功能的栈/" >
                     </div>
                 </div>
                 <!-- 多说评论框 end -->
@@ -293,9 +287,11 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                          <a class="tag" href="/tags/#算法" title="算法">算法</a>
                         
-                          <a class="tag" href="/tags/#Java内部类" title="Java内部类">Java内部类</a>
+                          <a class="tag" href="/tags/#Stack" title="Stack">Stack</a>
+                        
+                          <a class="tag" href="/tags/#栈" title="栈">栈</a>
                         
                     </div>
                 </section>
