@@ -13,11 +13,11 @@
 
     <title>
         
-          About - YuTaoLian的博客 | YuTaoLian&#39;s Blog
+          算法(三)-常用数据结构的定义 - YuTaoLian的博客 | YuTaoLian&#39;s Blog
         
     </title>
 
-    <link rel="canonical" href="http://yutaolian.github.io/about/">
+    <link rel="canonical" href="http://yutaolian.github.io/2016/09/12/算法-三-常用数据结构的定义/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -158,188 +158,144 @@
 
 
     <!-- Main Content -->
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/about-bg.jpg')">
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http://yutaolian.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>About</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">Wirte Code, Wirte Life.</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
+                        
+                          <a class="tag" href="/tags/#算法" title="算法">算法</a>
+                        
+                          <a class="tag" href="/tags/#数据结构" title="数据结构">数据结构</a>
+                        
+                    </div>
+                    <h1>算法(三)-常用数据结构的定义</h1>
+                    <h2 class="subheading">java实现</h2>
+                    <span class="meta">
+                        Posted by Lian YuTao on
+                        2016-09-12
+                    </span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        
-
-<!-- USE SIDEBAR -->
     <!-- Post Container -->
             <div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                post-container
-            ">
-            
-                <blockquote>
-<p>Talk is cheap. Show me the code. -Linus Torvalds</p>
-</blockquote>
-<p>2013年11月来京，开始了北漂生活，从开始的朦朦胧胧到现在略有目标，匠心便是人生的追求。成为一名”手艺人”也许是最好的目标。</p>
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
+                <pre><code>说明：文章的数据结构是基于Java总结的,java中使用的数据结构就是数组和引用（就是指针）
+</code></pre><p>常用的数据结构有栈，队列，链表，树，图等的数据结构的定义。<br>个人觉得了解一种数据结构必须了解它的定义，明白了定义我们就知道如何去扩展。</p>
+<h3 id="栈-–-gt-本质是数组"><a href="#栈-–-gt-本质是数组" class="headerlink" title="栈 –&gt;本质是数组"></a>栈 –&gt;本质是数组</h3><p>java中Stack类继承自Vector，而Vector的实现是基于数组的</p>
+<h3 id="队列-–-gt-本质也是数组"><a href="#队列-–-gt-本质也是数组" class="headerlink" title="队列 –&gt;本质也是数组"></a>队列 –&gt;本质也是数组</h3><p>Java中常用的队列就是PriorityQueue 其实现是基于数据的</p>
+<h3 id="链表一般会分为单链表-循环链表-双向链表"><a href="#链表一般会分为单链表-循环链表-双向链表" class="headerlink" title="链表一般会分为单链表,循环链表,双向链表"></a>链表一般会分为单链表,循环链表,双向链表</h3><p>链表，链表顾名思义就是要连起来么，即当前数据应该了下一个数据是有关联的。<br>单链表的基本结构的定义</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkList</span>&lt;<span class="type">T</span>&gt;</span>&#123;</div><div class="line">	T <span class="keyword">data</span>;</div><div class="line">	LinkList&lt;T&gt; next;</div><div class="line">	<span class="keyword">public</span> LinkList(T value)&#123;</div><div class="line">		<span class="keyword">this</span>.<span class="keyword">data</span> = value;</div><div class="line">	&#125;	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>循环链表的数据结构和单链表相同，只是最后一个元素和第一个元素相连，单链表的最一个元素是null,</p>
+<p>双向链表：从字面上理解可知道元素之间的关联是双向的，当前元素不仅和下一个有联系，应该和上一个元素也有关系。我们便可以在单链表的基础上修改成双链表，结构如下</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkList</span>&lt;<span class="type">T</span>&gt;</span>&#123;</div><div class="line">	T <span class="keyword">data</span>;</div><div class="line">	LinkList&lt;T&gt; next;</div><div class="line">	LinkList&lt;T&gt; pre;</div><div class="line">	<span class="keyword">public</span> LinkList(T value)&#123;</div><div class="line">		<span class="keyword">this</span>.<span class="keyword">data</span> = value;</div><div class="line">	&#125;	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="树"><a href="#树" class="headerlink" title="树"></a>树</h3>
 
-                <!-- 如果开启评论功能 -->
+                <hr>
+
                 
-                    <hr>
-
-                    
-                    <!-- 多说评论框 start -->
-                    <div class="comment">
-                        <div class="ds-thread"
-                            data-thread-key="about/index.html"
-                            data-title="About"
-                            data-url="http://yutaolian.github.io/about/index.html" >
-                        </div>
+                <!-- 多说 Share start -->
+                </style>
+                <div class="ds-share"
+                    style="text-align: right"
+                    data-thread-key="2016/09/12/算法-三-常用数据结构的定义/"
+                    data-title="算法(三)-常用数据结构的定义"
+                    data-url="http://yutaolian.github.io/2016/09/12/算法-三-常用数据结构的定义/"
+                    data-images=""
+                    data-content="说明：文章的数据结构是基于Java总结的,java中使用的数据结构就是数组和引用（就是指针）
+... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
+                    <div class="ds-share-inline">
+                      <ul  class="ds-share-icons-16">
+                        <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
+                        <li><a class="ds-wechat flat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+                        <li><a class="ds-weibo flat" href="javascript:void(0);" data-service="weibo">微博</a></li>
+                        <li><a class="ds-douban flat" href="javascript:void(0);" data-service="douban">豆瓣</a></li>
+                      </ul>
+                      <div class="ds-share-icons-more">
+                      </div>
                     </div>
-                    <!-- 多说评论框 end -->
+                <hr>
+                </div>
+                <!-- 多说 Share end-->
+                
+
+                <ul class="pager">
                     
-
                     
-
-
+                        <li class="next">
+                            <a href="/2016/09/10/算法-二-实现一个getMin功能的栈/" data-toggle="tooltip" data-placement="top" title="算法(二):实现一个getMin功能的栈">Next Post &rarr;</a>
+                        </li>
                     
-                    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-                    <script type="text/javascript">
-                        // dynamic User by Hux
-                        var _user = 'yutaolian';
+                </ul>
 
-                        // duoshuo comment query.
-                        var duoshuoQuery = {short_name: _user };
-                        (function() {
-                            var ds = document.createElement('script');
-                            ds.type = 'text/javascript';ds.async = true;
-                            ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-                            ds.charset = 'UTF-8';
-                            (document.getElementsByTagName('head')[0]
-                             || document.getElementsByTagName('body')[0]).appendChild(ds);
-                        })();
-                    </script>
-                    <!-- 多说公共JS代码 end -->
-                    
-
-                    
-
-
+                
+                <!-- 多说评论框 start -->
+                <div class="comment">
+                    <div class="ds-thread"
+                        data-thread-key="2016/09/12/算法-三-常用数据结构的定义/"
+                        data-title="算法(三)-常用数据结构的定义"
+                        data-url="http://yutaolian.github.io/2016/09/12/算法-三-常用数据结构的定义/" >
+                    </div>
+                </div>
+                <!-- 多说评论框 end -->
+                
 
                 
 
             </div>
+    <!-- Side Catalog Container -->
+        
+
     <!-- Sidebar Container -->
+
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <!-- no hr -->
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Java" title="Java">Java</a>
                         
-                            
-                            <a href="/tags/#Java" title="Java" rel="4">Java</a>
-                            
+                          <a class="tag" href="/tags/#算法" title="算法">算法</a>
                         
-                            
-                        
-                            
-                        
-                            
-                            <a href="/tags/#ArrayList" title="ArrayList" rel="2">ArrayList</a>
-                            
-                        
-                            
-                            <a href="/tags/#算法" title="算法" rel="3">算法</a>
-                            
-                        
-                            
-                            <a href="/tags/#Stack" title="Stack" rel="2">Stack</a>
-                            
-                        
-                            
-                            <a href="/tags/#栈" title="栈" rel="2">栈</a>
-                            
-                        
-                            
-                        
-                            
-                        
-                            
+                          <a class="tag" href="/tags/#数据结构" title="数据结构">数据结构</a>
                         
                     </div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-
-                        
-                            <img src="/img/avatar.jpg" />
-                        
-
-                        
-                            <p>Just do IT</p>
-                        
-
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            
-                            
-
-                            
-                                <li>
-                                    <a target="_blank" href="http://weibo.com/2449318213">
-                                        <span class="fa-stack fa-lg">
-                                            <i class="fa fa-circle fa-stack-2x"></i>
-                                            <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                </li>
-                            
-
-                            
-
-                            
-                                <li>
-                                    <a target="_blank"  href="https://github.com/yutaolian">
-                                        <span class="fa-stack fa-lg">
-                                            <i class="fa fa-circle fa-stack-2x"></i>
-                                            <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                        </span>
-                                    </a>
-                                </li>
-                            
-                            
-                            
-                            
-                        </ul>
-                    </div>
-                </section>
-                
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -352,9 +308,69 @@
                 </ul>
                 
             </div>
-        
+
+        </div>
     </div>
-</div>
+</article>
+
+
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    // dynamic User by Hux
+    var _user = 'yutaolian';
+
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user };
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->
