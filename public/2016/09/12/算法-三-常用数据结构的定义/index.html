@@ -101,14 +101,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -215,37 +215,20 @@
 <p>循环链表的数据结构和单链表相同，只是最后一个元素和第一个元素相连，单链表的最一个元素是null,</p>
 <p>双向链表：从字面上理解可知道元素之间的关联是双向的，当前元素不仅和下一个有联系，应该和上一个元素也有关系。我们便可以在单链表的基础上修改成双链表，结构如下</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LinkList</span>&lt;<span class="type">T</span>&gt;</span>&#123;</div><div class="line">	T <span class="keyword">data</span>;</div><div class="line">	LinkList&lt;T&gt; next;</div><div class="line">	LinkList&lt;T&gt; pre;</div><div class="line">	<span class="keyword">public</span> LinkList(T value)&#123;</div><div class="line">		<span class="keyword">this</span>.<span class="keyword">data</span> = value;</div><div class="line">	&#125;	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="树"><a href="#树" class="headerlink" title="树"></a>树</h3>
+<h3 id="树"><a href="#树" class="headerlink" title="树"></a>树</h3><p>树中最重要的莫过于二叉树了，二叉树树的数据结构和链表是类似的(树的一种比较极端的例子就是一棵树只有左子树或者只有右子树，那么其就够就是链表，其本质是相同的区别就在于怎么连)。至于其它树的结构在二叉树的基础上扩展即可，不再详细赘述。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class Tree&lt;<span class="built_in">T</span>&gt;&#123;</div><div class="line">	<span class="built_in">T</span> data;</div><div class="line">	Tree&lt;<span class="built_in">T</span>&gt; <span class="built_in">left</span>;</div><div class="line">	Tree&lt;<span class="built_in">T</span>&gt; <span class="built_in">right</span>;</div><div class="line">	public Tree(<span class="built_in">T</span> <span class="built_in">value</span>)&#123;</div><div class="line">		this.data = <span class="built_in">value</span>;</div><div class="line">	&#125;	</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="图"><a href="#图" class="headerlink" title="图"></a>图</h3><p>s</p>
+
 
                 <hr>
 
-                
-                <!-- 多说 Share start -->
-                </style>
-                <div class="ds-share"
-                    style="text-align: right"
-                    data-thread-key="2016/09/12/算法-三-常用数据结构的定义/"
-                    data-title="算法(三)-常用数据结构的定义"
-                    data-url="http://yutaolian.github.io/2016/09/12/算法-三-常用数据结构的定义/"
-                    data-images=""
-                    data-content="说明：文章的数据结构是基于Java总结的,java中使用的数据结构就是数组和引用（就是指针）
-... | YuTaoLian的博客 | YuTaoLian&#39;s Blog " >
-                    <div class="ds-share-inline">
-                      <ul  class="ds-share-icons-16">
-                        <li data-toggle="ds-share-icons-more"><a class="ds-more" href="#">分享到：</a></li>
-                        <li><a class="ds-wechat flat" href="javascript:void(0);" data-service="wechat">微信</a></li>
-                        <li><a class="ds-weibo flat" href="javascript:void(0);" data-service="weibo">微博</a></li>
-                        <li><a class="ds-douban flat" href="javascript:void(0);" data-service="douban">豆瓣</a></li>
-                      </ul>
-                      <div class="ds-share-icons-more">
-                      </div>
-                    </div>
-                <hr>
-                </div>
-                <!-- 多说 Share end-->
                 
 
                 <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2016/09/25/《深入理解Java虚拟机》读书笔记-一/" data-toggle="tooltip" data-placement="top" title="《深入理解Java虚拟机》读书笔记-(一)">&larr; Previous Post</a>
+                        </li>
                     
                     
                         <li class="next">
@@ -255,17 +238,13 @@
                 </ul>
 
                 
-                <!-- 多说评论框 start -->
-                <div class="comment">
-                    <div class="ds-thread"
-                        data-thread-key="2016/09/12/算法-三-常用数据结构的定义/"
-                        data-title="算法(三)-常用数据结构的定义"
-                        data-url="http://yutaolian.github.io/2016/09/12/算法-三-常用数据结构的定义/" >
-                    </div>
-                </div>
-                <!-- 多说评论框 end -->
-                
 
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
                 
 
             </div>
@@ -314,25 +293,22 @@
 </article>
 
 
-<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    // dynamic User by Hux
-    var _user = 'yutaolian';
 
-    // duoshuo comment query.
-    var duoshuoQuery = {short_name: _user };
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "yutaolian";
+    var disqus_identifier = "http://yutaolian.github.io/2016/09/12/算法-三-常用数据结构的定义/";
+    var disqus_url = "http://yutaolian.github.io/2016/09/12/算法-三-常用数据结构的定义/";
+
     (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0]
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
 </script>
-<!-- 多说公共JS代码 end -->
-
-
+<!-- disqus 公共JS代码 end -->
 
 
 

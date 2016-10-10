@@ -101,14 +101,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -201,40 +201,35 @@
                     <hr>
 
                     
-                    <!-- 多说评论框 start -->
+
+                    
+                    <!-- disqus 评论框 start -->
                     <div class="comment">
-                        <div class="ds-thread"
-                            data-thread-key="about/index.html"
-                            data-title="About"
-                            data-url="http://yutaolian.github.io/about/index.html" >
-                        </div>
+                        <div id="disqus_thread" class="disqus-thread"></div>
                     </div>
-                    <!-- 多说评论框 end -->
+                    <!-- disqus 评论框 end -->
                     
+
 
                     
 
-
                     
-                    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+                    <!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
                     <script type="text/javascript">
-                        // dynamic User by Hux
-                        var _user = 'yutaolian';
+                        /* * * CONFIGURATION VARIABLES * * */
+                        var disqus_shortname = "yutaolian";
+                        var disqus_identifier = "http://yutaolian.github.io/about/index.html";
+                        var disqus_url = "http://yutaolian.github.io/about/index.html";
 
-                        // duoshuo comment query.
-                        var duoshuoQuery = {short_name: _user };
                         (function() {
-                            var ds = document.createElement('script');
-                            ds.type = 'text/javascript';ds.async = true;
-                            ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-                            ds.charset = 'UTF-8';
-                            (document.getElementsByTagName('head')[0]
-                             || document.getElementsByTagName('body')[0]).appendChild(ds);
+                            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
                         })();
-                    </script>
-                    <!-- 多说公共JS代码 end -->
-                    
 
+                        
+                    </script>
+                    <!-- disqus 公共JS代码 end -->
                     
 
 
@@ -258,9 +253,7 @@
                     <div class="tags">
                         
                             
-                            <a href="/tags/#Java" title="Java" rel="4">Java</a>
-                            
-                        
+                            <a href="/tags/#Java" title="Java" rel="6">Java</a>
                             
                         
                             
@@ -270,7 +263,15 @@
                             
                         
                             
+                        
+                            
+                            <a href="/tags/#iOS" title="iOS" rel="3">iOS</a>
+                            
+                        
+                            
                             <a href="/tags/#算法" title="算法" rel="3">算法</a>
+                            
+                        
                             
                         
                             
@@ -279,6 +280,12 @@
                         
                             
                             <a href="/tags/#栈" title="栈" rel="2">栈</a>
+                            
+                        
+                            
+                        
+                            
+                        
                             
                         
                             
