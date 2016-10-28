@@ -8,3 +8,7 @@ tags:
 ---
 
 ### interface与@interface的区别
+
+interface为接口申明
+
+@interface为注解申明

@@ -108,14 +108,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -195,6 +195,29 @@
 
 <div class="post-preview">
 
+    <a href="/2016/10/28/使用一台Nginx对多台Tomcat实现负载均衡/">
+        <h2 class="post-title">
+            使用一台Nginx对多台Tomcat实现负载均衡
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            0. 简介使用一台Nginx服务器通过配置多台tomcat实现访问负载均衡。其实网上有很多例子。之前也配置过。不过为了加强记忆。写篇文章记录要点。(实现环境为mac pro)
+1.安装tomcat(本例安装2台)直接去Apache tomcat下载zip包，找个文件夹解压并且复制一份（可复制多个）如图
+2.修改tomcat的端口号对于搞Java web的小伙伴这就不详细说了。如图所示修改se......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lian YuTao on
+        2016-10-28
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2016/10/09/Java中interface与-interface的区别/">
         <h2 class="post-title">
             Java中interface与@interface的区别
@@ -203,7 +226,9 @@
             
         </h3>
         <div class="post-content-preview">
-            interface与@interface的区别...
+            interface与@interface的区别interface为接口申明
+@interface为注解申明
+...
         </div>
     </a>
     <p class="post-meta">
@@ -406,30 +431,6 @@ val声明一个final的变量 可以做简单类型推导可参考
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2016/09/02/Java源码分析-一-HashMap/">
-        <h2 class="post-title">
-            Java源码分析(一)-HashMap
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            HashMap 在java集合中来说算是比较重要的一个类了。其源码也是在面试过程中经常被问的一道面试题。之前自己也大略的看过，现在抱着一起学习的态度，分析一下HashMap的源码。
-0. 所处位置学过Java集合的人都应该看过张图(《Java编程思想》关于容器类库的简介图) 
-1. 构造方法个人认为学习一个类，应该先看其构造方法搞明白构造方法页面搞清楚了一半
-  public HashMap......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lian YuTao on
-        2016-09-02
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -475,13 +476,19 @@ val声明一个final的变量 可以做简单类型推导可参考
                             
                         
                             
-                        
-                            
                             <a href="/tags/#ArrayList" title="ArrayList" rel="2">ArrayList</a>
                             
                         
                             
+                        
+                            
                             <a href="/tags/#iOS" title="iOS" rel="3">iOS</a>
+                            
+                        
+                            
+                        
+                            
+                        
                             
                         
                             
