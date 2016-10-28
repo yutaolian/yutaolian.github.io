@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+          使用lombok简化Java代码 - YuTaoLian的博客 | YuTaoLian&#39;s Blog
+        
+    </title>
+
+    <link rel="canonical" href="http://yutaolian.github.io/2016/10/09/使用lombok简化Java代码/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="http://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+    <!-- 百度统计 -->
+	<script>
+	var _hmt = _hmt || [];
+	(function() {
+	  var hm = document.createElement("script");
+	  hm.src = "//hm.baidu.com/hm.js?830ad91a51e0e337b9837575ef8aa04f";
+	  var s = document.getElementsByTagName("script")[0]; 
+	  s.parentNode.insertBefore(hm, s);
+	})();
+	</script>
+
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">YuTaoLian&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archives/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    
+<!-- Image to hack wechat -->
+<!-- <img src="http://yutaolian.github.io/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        background-image: url('/img/home-bg.jpg')
+    }
+</style>
+<header class="intro-header" >
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                          <a class="tag" href="/tags/#java" title="java">java</a>
+                        
+                          <a class="tag" href="/tags/#lombok" title="lombok">lombok</a>
+                        
+                          <a class="tag" href="/tags/#代码优化" title="代码优化">代码优化</a>
+                        
+                    </div>
+                    <h1>使用lombok简化Java代码</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        Posted by Lian YuTao on
+                        2016-10-09
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="0-简介："><a href="#0-简介：" class="headerlink" title="0. 简介："></a>0. 简介：</h3><pre><code>lombok是优化Java代码的一个小工具，特别是对Java Bean中的代码。
+</code></pre><h4 id="val"><a href="#val" class="headerlink" title="val"></a><a href="https://projectlombok.org/features/val.html" target="_blank" rel="external">val</a></h4><pre><code>声明一个final的变量 可以做简单类型推导可参考 
+</code></pre><h4 id="NonNull"><a href="#NonNull" class="headerlink" title="@NonNull"></a><a href="https://projectlombok.org/features/NonNull.html" target="_blank" rel="external">@NonNull</a></h4><pre><code>修饰属性时会生成一个包含对应参数的构造函数，修饰方法参数时会校验参数不能为空，为空时可抛出空指针异常
+</code></pre><p>使用lombok注解的代码</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> NonNullExample(<span class="meta">@NonNull</span> Person person) &#123;</div><div class="line">     <span class="keyword">super</span>(<span class="string">"Hello"</span>);</div><div class="line">     <span class="keyword">this</span>.name = person.getName();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实际生成的代码</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">NonNullExample</span><span class="params">(@NonNull Person person)</span> </span>&#123;</div><div class="line">    <span class="keyword">super</span>(<span class="string">"Hello"</span>);</div><div class="line">    <span class="keyword">if</span> (person == <span class="keyword">null</span>) &#123;</div><div class="line">      <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"person"</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">this</span>.name = person.getName();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="Cleanup"><a href="#Cleanup" class="headerlink" title="@Cleanup"></a><a href="https://projectlombok.org/features/Cleanup.html" target="_blank" rel="external">@Cleanup</a></h4><pre><code>清理释放资源代码,会在使用资源的代码中自动添加释放资源的代码
+</code></pre><p>使用lombok注解的代码</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">CleanupExample</span> &#123;</div><div class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws IOException </span>&#123;</div><div class="line">     @Cleanup InputStream <span class="keyword">in</span> = <span class="keyword">new</span> FileInputStream(args[<span class="number">0</span>]);</div><div class="line">     @Cleanup OutputStream <span class="keyword">out</span> = <span class="keyword">new</span> FileOutputStream(args[<span class="number">1</span>]);</div><div class="line">     <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10000</span>];</div><div class="line">     <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line">       <span class="keyword">int</span> r = <span class="keyword">in</span>.read(b);</div><div class="line">       <span class="keyword">if</span> (r == <span class="number">-1</span>) <span class="keyword">break</span>;</div><div class="line">       <span class="keyword">out</span>.write(b, <span class="number">0</span>, r);</div><div class="line">     &#125;</div><div class="line">   &#125;</div><div class="line"> &#125;</div></pre></td></tr></table></figure>
+<p>实际生成的代码</p>
+<figure class="highlight cs"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(<span class="params">String[] args</span>) throws IOException </span>&#123;</div><div class="line">    InputStream <span class="keyword">in</span> = <span class="keyword">new</span> FileInputStream(args[<span class="number">0</span>]);</div><div class="line">    <span class="keyword">try</span> &#123;</div><div class="line">      OutputStream <span class="keyword">out</span> = <span class="keyword">new</span> FileOutputStream(args[<span class="number">1</span>]);</div><div class="line">      <span class="keyword">try</span> &#123;</div><div class="line">        <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">10000</span>];</div><div class="line">        <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</div><div class="line">          <span class="keyword">int</span> r = <span class="keyword">in</span>.read(b);</div><div class="line">          <span class="keyword">if</span> (r == <span class="number">-1</span>) <span class="keyword">break</span>;</div><div class="line">          <span class="keyword">out</span>.write(b, <span class="number">0</span>, r);</div><div class="line">        &#125;</div><div class="line">      &#125; <span class="keyword">finally</span> &#123;</div><div class="line">        <span class="keyword">if</span> (<span class="keyword">out</span> != <span class="literal">null</span>) &#123;</div><div class="line">          <span class="keyword">out</span>.close();</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125; <span class="keyword">finally</span> &#123;</div><div class="line">      <span class="keyword">if</span> (<span class="keyword">in</span> != <span class="literal">null</span>) &#123;</div><div class="line">        <span class="keyword">in</span>.close();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<h4 id="Getter-Setter"><a href="#Getter-Setter" class="headerlink" title="@Getter / @Setter"></a><a href="https://projectlombok.org/features/GetterSetter.html" target="_blank" rel="external">@Getter / @Setter</a></h4><pre><code>生成getter/setter代码,会是JavaBean中的代码减少2/3
+</code></pre><p>如图所示，可以修饰属性，<br><img src="/img/lombok/lombok_01.png" alt=""></p>
+<p>也可以修饰类<br><img src="/img/lombok/lombok_02.png" alt=""></p>
+<h4 id="ToString"><a href="#ToString" class="headerlink" title="@ToString"></a><a href="https://projectlombok.org/features/ToString.html" target="_blank" rel="external">@ToString</a></h4><pre><code>生成tostring代码 @ToString(xxx=xxx)可以加参数，具体参考官方文档
+</code></pre><h4 id="EqualsAndHashCode"><a href="#EqualsAndHashCode" class="headerlink" title="@EqualsAndHashCode"></a><a href="https://projectlombok.org/features/EqualsAndHashCode.html" target="_blank" rel="external">@EqualsAndHashCode</a></h4><pre><code>生成equals方法和hashCode方法
+</code></pre><h4 id="NoArgsConstructor-RequiredArgsConstructor-and-AllArgsConstructor"><a href="#NoArgsConstructor-RequiredArgsConstructor-and-AllArgsConstructor" class="headerlink" title="@NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor"></a><a href="https://projectlombok.org/features/Constructor.html" target="_blank" rel="external">@NoArgsConstructor, @RequiredArgsConstructor and @AllArgsConstructor</a></h4><pre><code>生产构造函数的注解（无参数，必须的构造函数(可以自定义构造函数的名称),全部参数的构造函数）
+</code></pre><h4 id="Data"><a href="#Data" class="headerlink" title="@Data"></a><a href="https://projectlombok.org/features/Data.html" target="_blank" rel="external">@Data</a></h4><pre><code>生成全部 ToString EqualsAndHashCode, Getter Setter 无参构造函数
+</code></pre><h4 id="Value"><a href="#Value" class="headerlink" title="@Value"></a><a href="https://projectlombok.org/features/Value.html" target="_blank" rel="external">@Value</a></h4><pre><code>类似@Data 但是不用，详情见文档
+</code></pre><h4 id="Builder"><a href="#Builder" class="headerlink" title="@Builder"></a><a href="https://projectlombok.org/features/Builder.html" target="_blank" rel="external">@Builder</a></h4><pre><code>生成建造者模式
+</code></pre><h4 id="SneakyThrows"><a href="#SneakyThrows" class="headerlink" title="@SneakyThrows"></a><a href="https://projectlombok.org/features/SneakyThrows.html" target="_blank" rel="external">@SneakyThrows</a></h4><pre><code>生成抛出异常的代码
+</code></pre><h4 id="Synchronized"><a href="#Synchronized" class="headerlink" title="@Synchronized"></a><a href="https://projectlombok.org/features/Synchronized.html" target="_blank" rel="external">@Synchronized</a></h4><pre><code>同步代码块，锁为当前对象
+</code></pre><h4 id="Getter-lazy-true"><a href="#Getter-lazy-true" class="headerlink" title="@Getter(lazy=true)"></a><a href="https://projectlombok.org/features/GetterLazy.html" target="_blank" rel="external">@Getter(lazy=true)</a></h4><pre><code>第一次调用时生成一次，之后会被缓存起来，代码中已加锁。
+</code></pre><h4 id="Log"><a href="#Log" class="headerlink" title="@Log"></a><a href="https://projectlombok.org/features/Log.html" target="_blank" rel="external">@Log</a></h4><pre><code>生成日志代码。各种日志的配置
+</code></pre><h3 id="1-lombok官网"><a href="#1-lombok官网" class="headerlink" title="1. lombok官网"></a>1. <a href="https://projectlombok.org/index.html" target="_blank" rel="external">lombok官网</a></h3><h3 id="2-lombok-Github-地址"><a href="#2-lombok-Github-地址" class="headerlink" title="2. lombok Github 地址"></a>2. <a href="https://github.com/rzwitserloot/lombok" target="_blank" rel="external">lombok Github 地址</a></h3><h3 id="3-maven-gradle等依赖地址"><a href="#3-maven-gradle等依赖地址" class="headerlink" title="3. maven gradle等依赖地址"></a>3. <a href="https://projectlombok.org/mavenrepo/index.html" target="_blank" rel="external">maven gradle等依赖地址</a></h3><h4 id="3-1-maven"><a href="#3-1-maven" class="headerlink" title="3.1 maven"></a>3.1 maven</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.projectlombok<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>lombok<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.16.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">		<span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line">	<span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="3-2-Gradle配置"><a href="#3-2-Gradle配置" class="headerlink" title="3.2 Gradle配置"></a>3.2 Gradle配置</h4><p>If your gradle version is &gt;= 2.12 you can use lombok by adding the following to your build.gradle in the dependencies block:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">compileOnly</span> "<span class="selector-tag">org</span><span class="selector-class">.projectlombok</span><span class="selector-pseudo">:lombok</span><span class="selector-pseudo">:1.16.10"</span></div></pre></td></tr></table></figure>
+<p>If you use an older version you can still use the following:</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="selector-tag">provided</span> "<span class="selector-tag">org</span><span class="selector-class">.projectlombok</span><span class="selector-pseudo">:lombok</span><span class="selector-pseudo">:1.16.10"</span></div></pre></td></tr></table></figure>
+
+
+                <hr>
+
+                
+
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2016/10/09/Java中interface与-interface的区别/" data-toggle="tooltip" data-placement="top" title="Java中interface与@interface的区别">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2016/09/25/《深入理解Java虚拟机》读书笔记-一/" data-toggle="tooltip" data-placement="top" title="《深入理解Java虚拟机》读书笔记-(一)">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+            </div>
+    <!-- Side Catalog Container -->
+        
+
+    <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#java" title="java">java</a>
+                        
+                          <a class="tag" href="/tags/#lombok" title="lombok">lombok</a>
+                        
+                          <a class="tag" href="/tags/#代码优化" title="代码优化">代码优化</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="http://howeguo.github.io/" target="_blank">阿浩</a></li>
+                    
+                </ul>
+                
+            </div>
+
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "yutaolian";
+    var disqus_identifier = "http://yutaolian.github.io/2016/10/09/使用lombok简化Java代码/";
+    var disqus_url = "http://yutaolian.github.io/2016/10/09/使用lombok简化Java代码/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+                    <li>
+                        <a target="_blank" href="http://weibo.com/2449318213">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/yutaolian">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; YuTaoLian&#39;s Blog 2016 
+                    <br>
+                    Theme by <a href="http://huangxuan.me">Hux</a> 
+                    <span style="display: inline-block; margin: 0 5px;">
+                        <i class="fa fa-heart"></i>
+                    </span> 
+                    Ported by <a href="http://blog.kaijun.rocks">Kaijun</a> | 
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=kaijun&repo=hexo-theme-huxblog&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/    
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yutaolian.github.io/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="http://yutaolian.github.io/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
