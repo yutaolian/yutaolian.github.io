@@ -101,14 +101,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -202,55 +202,275 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>HashMap 在java集合中来说算是比较重要的一个类了。其源码也是在面试过程中经常被问的一道面试题。之前自己也大略的看过，现在抱着一起学习的态度，分析一下HashMap的源码。</p>
+                <p>参考文章：<a href="http://blog.csdn.net/pandajava/article/details/42391733" target="_blank" rel="external"> java源码分析 —- HashMap源码分析 及其 实现原理分析</a></p>
+<p>HashMap 在java集合中来说算是比较重要的一个类了。其源码也是在面试过程中经常被问的一道面试题。之前自己也大略的看过，现在抱着一起学习的态度，分析一下HashMap的源码。</p>
 <h3 id="0-所处位置"><a href="#0-所处位置" class="headerlink" title="0. 所处位置"></a>0. 所处位置</h3><p>学过Java集合的人都应该看过张图(《Java编程思想》关于容器类库的简介图)<br> <img src="/img/java/collection.png" alt=""></p>
-<h3 id="1-构造方法"><a href="#1-构造方法" class="headerlink" title="1. 构造方法"></a>1. 构造方法</h3><p>个人认为学习一个类，应该先看其构造方法搞明白构造方法页面搞清楚了一半</p>
-<pre><code>  public HashMap(int initialCapacity, float loadFactor) {
-    if (initialCapacity &lt; 0)
-        throw new IllegalArgumentException(&quot;Illegal initial capacity: &quot; +
-                                           initialCapacity);
-    if (initialCapacity &gt; MAXIMUM_CAPACITY)
-        initialCapacity = MAXIMUM_CAPACITY;
-    if (loadFactor &lt;= 0 || Float.isNaN(loadFactor))
-        throw new IllegalArgumentException(&quot;Illegal load factor: &quot; +
-                                           loadFactor);
-    this.loadFactor = loadFactor;
-    this.threshold = tableSizeFor(initialCapacity);
-}
-
-/**
- * Constructs an empty &lt;tt&gt;HashMap&lt;/tt&gt; with the specified initial
- * capacity and the default load factor (0.75).
- *
- * @param  initialCapacity the initial capacity.
- * @throws IllegalArgumentException if the initial capacity is negative.
+<h3 id="1-HashMap的数据结构"><a href="#1-HashMap的数据结构" class="headerlink" title="1. HashMap的数据结构"></a>1. HashMap的数据结构</h3><p>数据结构中有数组和链表来实现对数据的存储，但这两者基本上是两个极端。<br>数组<br>数组存储区间是连续的，占用内存严重，故空间复杂的很大。但数组的二分查找时间复杂度小，为O(1)；数组的特点是：寻址容易，插入和删除困难；<br>链表<br>链表存储区间离散，占用内存比较宽松，故空间复杂度很小，但时间复杂度很大，达O（N）。链表的特点是：寻址困难，插入和删除容易。<br>哈希表<br>那么我们能不能综合两者的特性，做出一种寻址容易，插入删除也容易的数据结构？答案是肯定的，这就是我们要提起的哈希表。哈希表（(Hash table）既满足了数据的查找方便，同时不占用太多的内容空间，使用也十分方便。<br>　　哈希表有多种不同的实现方法，我接下来解释的是最常用的一种方法—— 拉链法，我们可以理解为“链表的数组” ，如图：</p>
+<p>　　从上图我们可以发现哈希表是由数组+链表组成的，一个长度为16的数组中，每个元素存储的是一个链表的头结点。那么这些元素是按照什么样的规则存储到数组中呢。一般情况是通过hash(key)%len获得，也就是元素的key的哈希值对数组长度取模得到。<br>比如上述哈希表中，12%16=12,28%16=12,108%16=12,140%16=12。所以12、28、108以及140都存储在数组下标为12的位置。<br>　　HashMap其实也是一个线性的数组实现的,所以可以理解为其存储数据的容器就是一个线性数组。这可能让我们很不解，一个线性的数组怎么实现按键值对来存取数据呢？这里HashMap有做一些处理。<br>　　首先HashMap里面实现一个静态内部类Entry，其重要的属性有 key , value, next，从属性key,value我们就能很明显的看出来Entry就是HashMap键值对实现的一个基础bean，我们上面说到HashMap的基础就是一个线性数组，这个数组就是Entry[]，Map里面的内容都保存在Entry[]里面。<br>    /**</p>
+<pre><code> * The table, resized as necessary. Length MUST Always be a power of two.
  */
-public HashMap(int initialCapacity) {
-    this(initialCapacity, DEFAULT_LOAD_FACTOR);
-}
+transient Entry[] table;
+</code></pre><h3 id="2-HashMap源码分析"><a href="#2-HashMap源码分析" class="headerlink" title="2. HashMap源码分析"></a>2. HashMap源码分析</h3><p> HashMap继承自AbstractMap，实现了Map接口（这些内容可以参考《Java集合类》）。来看类的定义。</p>
+<figure class="highlight scala"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public <span class="class"><span class="keyword">class</span> <span class="title">HashMap&lt;K</span>,<span class="title">V&gt;</span> <span class="keyword">extends</span> <span class="title">AbstractMap&lt;K</span>,<span class="title">V&gt;</span> <span class="title">implements</span> <span class="title">Map&lt;K</span>,<span class="title">V&gt;</span>, <span class="title">Cloneable</span>, <span class="title">Serializable</span></span></div></pre></td></tr></table></figure>
+<pre><code>Map接口定义了所有Map子类必须实现的方法。Map接口中还定义了一个内部接口Entry。
 
-/**
- * Constructs an empty &lt;tt&gt;HashMap&lt;/tt&gt; with the default initial capacity
- * (16) and the default load factor (0.75).
- */
-public HashMap() {
-    this.loadFactor = DEFAULT_LOAD_FACTOR; // all other fields defaulted
-}
+AbstractMap也实现了Map接口，并且提供了两个实现Entry的内部类：SimpleEntry和SimpleImmutableEntry。
 
-/**
- * Constructs a new &lt;tt&gt;HashMap&lt;/tt&gt; with the same mappings as the
- * specified &lt;tt&gt;Map&lt;/tt&gt;.  The &lt;tt&gt;HashMap&lt;/tt&gt; is created with
- * default load factor (0.75) and an initial capacity sufficient to
- * hold the mappings in the specified &lt;tt&gt;Map&lt;/tt&gt;.
- *
- * @param   m the map whose mappings are to be placed in this map
- * @throws  NullPointerException if the specified map is null
- */
-public HashMap(Map&lt;? extends K, ? extends V&gt; m) {
-    this.loadFactor = DEFAULT_LOAD_FACTOR;
-    putMapEntries(m, false);
+定义了接口，接口中又有内部接口，然后有搞了个抽象类实现接口，抽象类里面又搞了两个内部类实现接口的内部接口，有没有点绕，为什么搞成这样呢？先不管了，先看HashMap吧。
+
+HashMap中定义的属性（应该都能看明白，不过还是解释一下）：
+</code></pre><figure class="highlight gradle"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">     * 默认的初始容量，必须是2的幂。</div><div class="line">     */</div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">16</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">     * 最大容量（必须是2的幂且小于2的30次方，传入容量过大将被这个值替换）</div><div class="line">     */</div><div class="line">    <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAXIMUM_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">30</span>;</div><div class="line">    <span class="comment">/**</span></div><div class="line">    * 默认装载因子，这个后面会做解释</div><div class="line">   */</div><div class="line">  <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75</span>f;</div><div class="line">   <span class="comment">/**</span></div><div class="line">    * 存储数据的Entry数组，长度是2的幂。看到数组的内容了，接着看数组中存的内容就明白为什么博文开头先复习数据结构了</div><div class="line">    */</div><div class="line">   <span class="keyword">transient</span> Entry[] table;</div><div class="line">   <span class="comment">/**</span></div><div class="line">    * map中保存的键值对的数量</div><div class="line">    */</div><div class="line">   <span class="keyword">transient</span> <span class="keyword">int</span> <span class="keyword">size</span>;</div><div class="line">   <span class="comment">/**</span></div><div class="line">    * 需要调整大小的极限值（容量*装载因子）</div><div class="line">    */</div><div class="line">   <span class="keyword">int</span> threshold;</div><div class="line">   <span class="comment">/**</span></div><div class="line">    *装载因子</div><div class="line">    */</div><div class="line">   <span class="keyword">final</span> <span class="keyword">float</span> loadFactor;</div><div class="line">  <span class="comment">/**</span></div><div class="line">    * map结构被改变的次数</div><div class="line">    */</div><div class="line">   <span class="keyword">transient</span> <span class="keyword">volatile</span> <span class="keyword">int</span> modCount;</div></pre></td></tr></table></figure>
+<p>接着是HashMap的构造方法。</p>
+<figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line">     *使用默认的容量及装载因子构造一个空的HashMap</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">HashMap</span>() &#123;</div><div class="line">        <span class="keyword">this</span>.loadFactor = DEFAULT_LOAD_FACTOR;</div><div class="line">        threshold = (<span class="built_in">int</span>)(DEFAULT_INITIAL_CAPACITY * DEFAULT_LOAD_FACTOR);<span class="comment">//计算下次需要调整大小的极限值</span></div><div class="line">        table = <span class="keyword">new</span> Entry[DEFAULT_INITIAL_CAPACITY];    <span class="comment">//根据默认容量（16）初始化table</span></div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"><span class="comment">/**</span></div><div class="line">     * 根据给定的初始容量的装载因子创建一个空的HashMap</div><div class="line">     * 初始容量小于0或装载因子小于等于0将报异常 </div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">HashMap</span>(<span class="built_in">int</span> initialCapacity, <span class="built_in">float</span> loadFactor) &#123;</div><div class="line">        <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal initial capacity: "</span> +</div><div class="line">                                               initialCapacity);</div><div class="line">        <span class="keyword">if</span> (initialCapacity &gt; MAXIMUM_CAPACITY)<span class="comment">//调整最大容量</span></div><div class="line">            initialCapacity = MAXIMUM_CAPACITY;</div><div class="line">        <span class="keyword">if</span> (loadFactor &lt;= <span class="number">0</span> || Float.isNaN(loadFactor))</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal load factor: "</span> +</div><div class="line">                                               loadFactor);</div><div class="line">        <span class="built_in">int</span> capacity = <span class="number">1</span>;</div><div class="line">        <span class="comment">//设置capacity为大于initialCapacity且是2的幂的最小值</span></div><div class="line">        <span class="keyword">while</span> (capacity &lt; initialCapacity)  <span class="comment">// 假设initialCapacity的值为30 则capacity的值 最终问2的5次方 32 。</span></div><div class="line">            capacity &lt;&lt;= <span class="number">1</span>;                 <span class="comment">//也就是说hashMap中entry[] 的初始化大小是32 而非30。</span></div><div class="line">        <span class="keyword">this</span>.loadFactor = loadFactor;</div><div class="line">        threshold = (<span class="built_in">int</span>)(capacity * loadFactor);</div><div class="line">        table = <span class="keyword">new</span> Entry[capacity];</div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"><span class="comment">/**</span></div><div class="line">     *根据指定容量创建一个空的HashMap</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">HashMap</span>(<span class="built_in">int</span> initialCapacity) &#123;</div><div class="line">        <span class="keyword">this</span>(initialCapacity, DEFAULT_LOAD_FACTOR);<span class="comment">//调用上面的构造方法，容量为指定的容量，装载因子是默认值</span></div><div class="line">    &#125;</div><div class="line"><span class="comment">/**</span></div><div class="line">     *通过传入的map创建一个HashMap，容量为默认容量（16）和(map.zise()/DEFAULT_LOAD_FACTORY)+1的较大者，装载因子为默认值</div><div class="line">     */</div><div class="line">    <span class="keyword">public</span> <span class="keyword">HashMap</span>(Map&lt;? extends K, ? extends V&gt; m) &#123;</div><div class="line">        <span class="comment">//调用构造方法 传入相关参数 并完成初始化</span></div><div class="line">        <span class="keyword">this</span>(Math.<span class="built_in">max</span>((<span class="built_in">int</span>) (m.<span class="built_in">size</span>() / DEFAULT_LOAD_FACTOR) + <span class="number">1</span>,DEFAULT_INITIAL_CAPACITY), DEFAULT_LOAD_FACTOR);</div><div class="line">       </div><div class="line">        putAllForCreate(m);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>上面的构造方法中调用到了init()方法，最后一个方法还调用了</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">putAllForCreate(<span class="built_in">Map</span>&lt;? <span class="keyword">extends</span> K, ? <span class="keyword">extends</span> V&gt; m)。</div></pre></td></tr></table></figure>
+<p>init方法是一个空方法，里面没有任何内容。（其作用为何？）<br>putAllForCreate看方法名就是创建的时候将传入的map全部放入新创建的对象中。该方法中还涉及到其他方法，将在后面介绍。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">private <span class="keyword">void</span> putAllForCreate(<span class="built_in">Map</span>&lt;? <span class="keyword">extends</span> K, ? <span class="keyword">extends</span> V&gt; m) &#123;  </div><div class="line">      <span class="keyword">for</span> (&lt;strong&gt;<span class="built_in">Iterator</span>&lt;? <span class="keyword">extends</span> <span class="built_in">Map</span>.Entry&lt;? <span class="keyword">extends</span> K, ? <span class="keyword">extends</span> V&gt;&gt; i =&lt;u&gt; m.entrySet().iterator()&lt;/u&gt;; i.hasNext();&lt;/strong&gt; ) &#123;  </div><div class="line">          &lt;strong&gt;<span class="built_in">Map</span>.Entry&lt;? <span class="keyword">extends</span> K, ? <span class="keyword">extends</span> V&gt; e = i.next();&lt;/strong&gt;  </div><div class="line">          &lt;u&gt;putForCreate(e.getKey(), e.getValue());&lt;/u&gt;  </div><div class="line">      &#125;  </div><div class="line">  &#125;</div><div class="line">  </div><div class="line">``` </div><div class="line">  </div><div class="line">先看初始化table时均使用了Entry，这是HashMap的一个内部类，实现了<span class="built_in">Map</span>接口的内部接口Entry。下面给出<span class="built_in">Map</span>.Entry接口及HashMap.Entry类的内容。<span class="built_in">Map</span>.Entry接口定义的方法</div></pre></td></tr></table></figure>
+<p> K getKey();//获取Key<br> V getValue();//获取Value<br> V setValue();//设置Value，至于具体返回什么要看具体实现<br> boolean equals(Object o);//定义equals方法用于判断两个Entry是否相同<br> int hashCode();//定义获取hashCode的方法</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">HashMap.<span class="keyword">Entry</span>类的具体实现</div></pre></td></tr></table></figure>
+<p>  static class Entry<k,v> implements Map.Entry<k,v> {<br>          final K key;<br>          V value;<br>          Entry<k,v> next;//对下一个节点的引用（看到链表的内容，结合定义的Entry数组，是不是想到了哈希表的拉链法实现？！）<br>          final int hash;//哈希值</k,v></k,v></k,v></p>
+<pre><code>     Entry(int h, K k, V v, Entry&lt;K,V&gt; n) {
+         value = v;
+         next = n;
+        key = k;
+        hash = h;
+    }
+
+    public final K getKey() {
+        return key;
+    }
+
+    public final V getValue() {
+        return value;
+    }
+
+    public final V setValue(V newValue) {
+        V oldValue = value;
+       value = newValue;
+        return oldValue;//返回的是之前的Value
+    }
+
+    public final boolean equals(Object o) {
+        if (!(o instanceof Map.Entry))//先判断类型是否一致
+               return false;
+        Map.Entry e = (Map.Entry)o;
+        Object k1 = getKey();
+        Object k2 = e.getKey();
+        // Key相等且Value相等则两个Entry相等
+        if (k1 == k2 || (k1 != null &amp;&amp; k1.equals(k2))) {
+            Object v1 = getValue();
+            Object v2 = e.getValue();
+            if (v1 == v2 || (v1 != null &amp;&amp; v1.equals(v2)))
+                return true;
+        }
+        return false;
+    }
+    // hashCode是Key的hashCode和Value的hashCode的异或的结果
+    public final int hashCode() {
+        return (key==null   ? 0 : key.hashCode()) ^
+              (value==null ? 0 : value.hashCode());
+    }
+    // 重写toString方法，是输出更清晰
+    public final String toString() {
+        return getKey() + &quot;=&quot; + getValue();
+   }
+
+   /**
+     *当调用put(k,v)方法存入键值对时，如果k已经存在，则该方法被调用（为什么没有内容？）
+     */
+   void recordAccess(HashMap&lt;K,V&gt; m) {
+   }
+
+   /**
+     * 当Entry被从HashMap中移除时被调用（为什么没有内容？）
+     */
+    void recordRemoval(HashMap&lt;K,V&gt; m) {
+    }
 }
-</code></pre>
+</code></pre><figure class="highlight maxima"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">看完属性和构造方法，接着看HashMap中的其他方法，一个个分析，从最常用的<span class="built_in">put</span>和<span class="built_in">get</span>说起吧。</div><div class="line"><span class="built_in">put</span>()该方法 返回与 <span class="built_in">key</span> 关联的旧值；如果<span class="built_in">key</span> 没有任何映射关系，则返回null。</div></pre></td></tr></table></figure>
+<p>  public V put(K key, V value) {<br>          if (key == null)<br>              return putForNullKey(value);</p>
+<pre><code>      int hash = hash(key.hashCode());
+      int i = indexFor(hash, table.length);  //获取应该存放的索引值
+
+      for (Entry&lt;K,V&gt; e = table[i]; e != null; e = e.next) {  //校验key值之前是否存在，存在则替换并返回先前的值
+         Object k;
+         if (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) {
+             V oldValue = e.value;
+             e.value = value;
+             e.recordAccess(this);
+             return oldValue;
+         }
+     }
+
+     // 该key之前不存在 则 执行 添加操作
+     modCount++;
+     addEntry(hash, key, value, i);   //四个参数 hash值  key  value  i索引
+     return null;
+ }
+当存入的key是null的时候将调用putForNUllKey方法，暂时将这段逻辑放一边，看key不为null的情况。
+</code></pre><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">先调用了<span class="built_in">hash</span>(int h)方法获取了一个<span class="built_in">hash</span>值。</div></pre></td></tr></table></figure>
+<p> static int hash(int h) {<br>         // This function ensures that hashCodes that differ only by<br>        // constant multiples at each bit position have a bounded<br>         // number of collisions (approximately 8 at default load factor).<br>        h ^= (h &gt;&gt;&gt; 20) ^ (h &gt;&gt;&gt; 12);<br>         return h ^ (h &gt;&gt;&gt; 7) ^ (h &gt;&gt;&gt; 4);<br>    }<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">这个方法的主要作用是防止质量较差的哈希函数带来过多的冲突（碰撞）问题。Java中int值占<span class="number">4</span>个字节，即<span class="number">32</span>位。根据这<span class="number">32</span>位值进行移位、异或运算得到一个值。</div></pre></td></tr></table></figure></p>
+<p> static int indexFor(int h, int length) {<br>         return h &amp; (length-1);<br>     }<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">indexFor返回hash值和table数组长度减<span class="number">1</span>的与运算结果，获取索引位置。</div><div class="line">为什么使用的是length<span class="number">-1</span>？因为这样可以保证结果的最大值是length<span class="number">-1</span>，不会产生数组越界问题。获取索引位置之后做了什么？探测table[i]所在的链表，所发现<span class="type">key</span>值与传入的<span class="type">key</span>值相同的对象，则替换并返回oldValue。（<span class="type">key</span>值之前存在，替换并且返回旧值）若找不到，则通过addEntry(hash,<span class="type">key</span>,value,i)添加新的对象。 （<span class="type">key</span>值之前不存在，添加addEntry方法 ，并返回null）</div><div class="line"></div><div class="line">来看addEntry(hash,<span class="type">key</span>,value,i)方法。</div></pre></td></tr></table></figure></p>
+<p>void addEntry(int hash, K key, V value, int bucketIndex) {<br>         Entry<k,v> e = table[bucketIndex];   //bucketIndex位置的元素先保存起来（新加的entry要占据这个位置）<br>         table[bucketIndex] = new Entry<k,v>(hash, key, value, e);//将新的值存到bucketIndex处，该值的next指向 刚刚保存的e元素<br>         //检测是不是需要扩充容量 （2倍2倍的扩容）<br>          if (size++ &gt;= threshold)   // threshold默认值 是  16 <em> 0.75 = 12             resize(2 </em> table.length);<br>  }<br><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">这就是在一个链表头部插入一个节点的过程。获取<span class="keyword">table</span>[i]的对象e，将<span class="keyword">table</span>[i]的对象修改为新增对象，让新增对象的next指向e。之后判断size是否到达了需要扩充<span class="keyword">table</span>数组容量的界限并让size自增1，如果达到了则调用resize(int <span class="comment">capacity)</span>方法将数组容量拓展为原来的两倍。</div></pre></td></tr></table></figure></k,v></k,v></p>
+<p> void resize(int newCapacity) {<br>          Entry[] oldTable = table;<br>          int oldCapacity = oldTable.length;<br>          // 这个if块表明，如果容量已经到达允许的最大值，即MAXIMUN_CAPACITY，则不再拓展容量，而将装载拓展的界限值设为计算机允许的最大值。<br>         // 不会再触发resize方法，而是不断的向map中添加内容，即table数组中的链表可以不断变长，但数组长度不再改变<br>         if (oldCapacity == MAXIMUM_CAPACITY) {  //MAXIMUM_CAPACITY  1073741824 [0x40000000]<br>             threshold = Integer.MAX_VALUE;<br>             return;<br>          }<br>         // 创建新数组，容量为指定的容量<br>         Entry[] newTable = new Entry[newCapacity];<br>         transfer(newTable);<br>         table = newTable;<br>         // 设置下一次需要调整数组大小的界限<br>         threshold = (int)(newCapacity * loadFactor);<br>     }<br><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> 结合上面给出的注释，调整数组容量的内容仅剩下将原<span class="keyword">table</span>中的内容复制到newTable中并将newTable赋值给给<span class="keyword">table</span>变量。即上面代码中的“transfer(newTable);<span class="keyword">table</span> <span class="comment">= newTable</span>;”。</div><div class="line">来看transfer(Entry[] newTable)方法。</div></pre></td></tr></table></figure></p>
+<p>  void transfer(Entry[] newTable) {<br>          // 保留原数组的引用到src中，<br>          Entry[] src = table;<br>          // 新容量使新数组的长度<br>          int newCapacity = newTable.length;<br>          // 遍历原数组<br>         for (int j = 0; j &lt; src.length; j++) {<br>              // 获取元素e （此处的e是单链表的头结点）<br>              Entry<k,v> e = src[j];<br>             if (e != null) {<br>                 // 将原数组中的元素置为null<br>                 src[j] = null;<br>                 // 遍历原数组中j位置指向的链表<br>                 do {<br>                     Entry<k,v> next = e.next;<br>                     // 根据新的容量计算e在新数组中的位置<br>                     int i = indexFor(e.hash, newCapacity);<br>                     // 将e插入到newTable[i]指向的链表的头部<br>                     e.next = newTable[i];<br>                     newTable[i] = e;<br>                    e = next;<br>                 } while (e != null);<br>             }<br>         }<br>     }<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">这样处理效果 原来的 单链表如果 顺序是  （头） <span class="selector-tag">a</span> <span class="selector-tag">b</span> c d e  （尾）通过  transfer方法之后的顺序是  (头)  e  d c  <span class="selector-tag">b</span> <span class="selector-tag">a</span> （尾）  因为后插入的在 链表的头部。从上面的代码可以看出，HashMap之所以不能保持元素的顺序有以下几点原因：</div><div class="line"></div><div class="line">    第一，插入元素的时候对元素进行哈希处理，不同元素分配到table的不同位置；</div><div class="line">    第二，容量拓展的时候又进行了hash处理；</div><div class="line">    第三，复制原表内容的时候链表被倒置。</div><div class="line"></div><div class="line">一个put方法带出了这么多内容，接着看看putAll吧。</div></pre></td></tr></table></figure></k,v></k,v></p>
+<p>  public void putAll(Map&lt;? extends K, ? extends V&gt; m) {<br>          int numKeysToBeAdded = m.size();<br>          if (numKeysToBeAdded == 0)<br>              return;<br>          // 为什么判断条件是numKeysToBeAdded，不是(numKeysToBeAdded+table.length)&gt;threshold???<br>         if (numKeysToBeAdded &gt; threshold) {<br>              int targetCapacity = (int)(numKeysToBeAdded / loadFactor + 1);<br>              if (targetCapacity &gt; MAXIMUM_CAPACITY)<br>                 targetCapacity = MAXIMUM_CAPACITY;<br>             int newCapacity = table.length;<br>             while (newCapacity &lt; targetCapacity)<br>                 newCapacity &lt;&lt;= 1;<br>             if (newCapacity &gt; table.length)<br>                 resize(newCapacity);<br>         }</p>
+<pre><code>    for (Iterator&lt;? extends Map.Entry&lt;? extends K, ? extends V&gt;&gt; i = m.entrySet().iterator(); i.hasNext(); ) {
+       Map.Entry&lt;? extends K, ? extends V&gt; e = i.next();
+        put(e.getKey(), e.getValue());
+    }
+}
+</code></pre><figure class="highlight gams"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">先回答上面的问题：为什么判断条件是numKeysToBeAdded，不是(numKeysToBeAdded+<span class="keyword">table</span>.length)&gt;threshold </div><div class="line">这是一种保守的做法，明显地，我们应该在(numKeysToBeAdded+<span class="keyword">table</span>.length)&gt;threshold的时候去拓展容量，但是考虑到将被添加的元素可能会有Key与原本存在的Key相同的情况，所以采用保守的做法，避免拓展到过大的容量。 接着是遍历m中的内容，然后调用put方法将元素添加到<span class="keyword">table</span>数组中。遍历的时候涉及到了entrySet方法，这个方法定义在Map接口中，HashMap中也有实现，后面会解释HashMap的这个方法，其它Map的实现暂不解释。</div><div class="line"></div><div class="line">	下面介绍在put方法中被调用到的putForNullKey方法。</div></pre></td></tr></table></figure>
+<p> private V putForNullKey(V value) {<br>         for (Entry<k,v> e = table[0]; e != null; e = e.next) {<br>             if (e.key == null) {<br>                 V oldValue = e.value;<br>                 e.value = value;<br>                 e.recordAccess(this);<br>                  return oldValue;<br>             }<br>         }<br>         modCount++;<br>         addEntry(0, null, value, 0); // null 的 hash值是0 。 索引位置 index也是 0<br>        return null;<br>     }<br><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">这是一个私有方法，在<span class="built_in">put</span>方法中被调用。它首先遍历table数组，如果找到key为<span class="literal">null</span>的元素，则替换元素值并返回oldValue；否则通过addEntry方法添加元素，之后返回<span class="literal">null</span>。还记得上面构造方法中调用到的putAllForCreate吗？一口气将<span class="built_in">put</span>操作的方法看完吧。</div></pre></td></tr></table></figure></k,v></p>
+<p> private void putAllForCreate(Map&lt;? extends K, ? extends V&gt; m) {<br>         for (Iterator&lt;? extends Map.Entry&lt;? extends K, ? extends V&gt;&gt; i = m.entrySet().iterator(); i.hasNext(); ) {<br>             Map.Entry&lt;? extends K, ? extends V&gt; e = i.next();<br>             putForCreate(e.getKey(), e.getValue());<br>         }<br>     }<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">先将遍历的过程放在一边，因为它同样涉及到了entrySet()方法。剩下的代码很简单，只是调用putForCreate方法逐个元素加入。</div></pre></td></tr></table></figure></p>
+<p> private void putForCreate(K key, V value) {<br>          int hash = (key == null) ? 0 : hash(key.hashCode());<br>          int i = indexFor(hash, table.length);<br>          for (Entry<k,v> e = table[i]; e != null; e = e.next) {<br>              Object k;<br>              if (e.hash == hash &amp;&amp;<br>                  ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) {<br>                  e.value = value;<br>                  return;<br>             }<br>         }<br>         createEntry(hash, key, value, i);<br>     }<br><figure class="highlight q"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">    </div><div class="line">该方法先计算需要添加的元素的hash值和在table数组中的索引i。接着遍历table[i]的链表，若有元素的<span class="built_in">key</span>值与传入<span class="built_in">key</span>值相等，则替换<span class="built_in">value</span>，       结束方法。若不存在<span class="built_in">key</span>值相同的元素，则调用createEntry创建并添加元素。</div></pre></td></tr></table></figure></k,v></p>
+<p>void createEntry(int hash, K key, V value, int bucketIndex) {<br>          Entry<k,v> e = table[bucketIndex];<br>         table[bucketIndex] = new Entry<k,v>(hash, key, value, e);<br>         size++;<br>     }<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">这个方法的内容就不解释了，上面都解释过。 至此所有<span class="keyword">put</span>相关操作都解释完毕了。<span class="keyword">put</span>之外，另一个常用的操作就是<span class="keyword">get</span>，下面就来看<span class="keyword">get</span>方法。</div></pre></td></tr></table></figure></k,v></k,v></p>
+<p> public V get(Object key) {<br>          if (key == null)<br>              return getForNullKey();<br>          int hash = hash(key.hashCode());<br>          for (Entry<k,v> e = table[indexFor(hash, table.length)];e != null; e = e.next) {<br>              Object k;<br>              if (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k)))<br>                 return e.value;<br>         }<br>         return null;<br>     }<br> <figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">     </div><div class="line"> 该方法分为<span class="built_in">key</span>为<span class="keyword">null</span>和不为<span class="keyword">null</span>两块。先看不为<span class="keyword">null</span>的情况。先获取<span class="built_in">key</span>的hash值，之后通过hash值及table.length获取<span class="built_in">key</span>对应的table数组的索引，遍历索引的链表，所找到<span class="built_in">key</span>相同的元素，则返回元素的value，否者返回<span class="keyword">null</span>。不为<span class="keyword">null</span>的情况调用了getForNullKey()方法。</div><div class="line"></div><div class="line"><span class="number">1</span> <span class="keyword">private</span> V getForNullKey() &#123;</div><div class="line"><span class="number">2</span>         <span class="keyword">for</span> (Entry&lt;K,V&gt; e = table[<span class="number">0</span>]; e != <span class="keyword">null</span>; e = e.next) &#123;</div><div class="line"><span class="number">3</span>             <span class="keyword">if</span> (e.<span class="built_in">key</span> == <span class="keyword">null</span>)</div><div class="line"><span class="number">4</span>                 <span class="keyword">return</span> e.value;</div><div class="line"><span class="number">5</span>         &#125;</div><div class="line"><span class="number">6</span>         <span class="keyword">return</span> <span class="keyword">null</span>;</div><div class="line"><span class="number">7</span>     &#125;</div><div class="line">    这是一个私有方法，只在<span class="built_in">get</span>中被调用。该方法判断table[<span class="number">0</span>]中的链表是否包含<span class="built_in">key</span>为<span class="keyword">null</span>的元素，包含则返回value，不包含则返回<span class="keyword">null</span>。为什么是遍历table[<span class="number">0</span>]的链表？因为<span class="built_in">key</span>为<span class="keyword">null</span>的时候获得的hash值都是<span class="number">0</span>。</div><div class="line">添加（put）和获取（<span class="built_in">get</span>）都结束了，接着看如何判断一个元素是否存在。</div><div class="line"><span class="keyword">HashMap</span>没有提供判断元素是否存在的方法，只提供了判断Key是否存在及Value是否存在的方法，分别是containsKey(<span class="keyword">Object</span> <span class="built_in">key</span>)、containsValue(<span class="keyword">Object</span> value)。</div><div class="line">containsKey(<span class="keyword">Object</span> <span class="built_in">key</span>)方法很简单，只是判断getEntry(<span class="built_in">key</span>)的结果是否为<span class="keyword">null</span>，是则返回<span class="keyword">false</span>，否返回<span class="keyword">true</span>。</div></pre></td></tr></table></figure></k,v></p>
+<p> public boolean containsKey(Object key) {<br>          return getEntry(key) != null;<br>      }<br>  final Entry<k,v> getEntry(Object key) {<br>          int hash = (key == null) ? 0 : hash(key.hashCode());<br>          for (Entry<k,v> e = table[indexFor(hash, table.length)]; e != null;e = e.next) {<br>              Object k;<br>             if (e.hash == hash &amp;&amp;((k = e.key) == key || (key != null &amp;&amp; key.equals(k))))<br>                 return e;<br>         }<br>         return null;<br>     }<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">getEntry(<span class="keyword">Object</span> <span class="built_in">key</span>)也没什么内容，只是根据<span class="built_in">key</span>对应的hash值计算在table数组中的索引位置，然后遍历该链表判断是否存在相同的<span class="built_in">key</span>值。</div></pre></td></tr></table></figure></k,v></k,v></p>
+<p>  public boolean containsValue(Object value) {<br>      if (value == null)<br>              return containsNullValue();</p>
+<pre><code> Entry[] tab = table;
+     for (int i = 0; i &lt; tab.length ; i++)
+         for (Entry e = tab[i] ; e != null ; e = e.next)
+             if (value.equals(e.value))
+                 return true;
+return false;
+}
+</code></pre><p> private boolean containsNullValue() {<br>     Entry[] tab = table;<br>         for (int i = 0; i &lt; tab.length ; i++)<br>             for (Entry e = tab[i] ; e != null ; e = e.next)<br>                 if (e.value == null)<br>                     return true;<br>     return false;<br>     }<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">判断一个value是否存在比判断<span class="built_in">key</span>是否存在还要简单，就是遍历所有元素判断是否有相等的值。这里分为两种情况处理，value为<span class="keyword">null</span>何不为<span class="keyword">null</span>的情况，但内容差不多，只是判断相等的方式不同。这个判断是否存在必须遍历所有元素，是一个双重循环的过程，因此是比较耗时的操作。接着看<span class="keyword">HashMap</span>中“删除”相关的操作，有remove(<span class="keyword">Object</span> <span class="built_in">key</span>)和<span class="built_in">clear</span>()两个方法。</div><div class="line"></div><div class="line">    remove(<span class="keyword">Object</span> <span class="built_in">key</span>)</div></pre></td></tr></table></figure></p>
+<p>public V remove(Object key) {<br>         Entry<k,v> e = removeEntryForKey(key);<br>         return (e == null ? null : e.value);<br>     }<br><figure class="highlight processing"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">看这个方法，removeEntryKey(<span class="built_in">key</span>)的返回结果应该是被移除的元素，如果不存在这个元素则返回为<span class="keyword">null</span>。remove方法根据removeEntryKey返回的结果e是否为<span class="keyword">null</span>返回<span class="keyword">null</span>或e.value。</div><div class="line"></div><div class="line">    removeEntryForKey(<span class="keyword">Object</span> <span class="built_in">key</span>)</div></pre></td></tr></table></figure></k,v></p>
+<p>  final Entry<k,v> removeEntryForKey(Object key) {<br>          int hash = (key == null) ? 0 : hash(key.hashCode());<br>          int i = indexFor(hash, table.length);<br>          Entry<k,v> prev = table[i];<br>          Entry<k,v> e = prev;</k,v></k,v></k,v></p>
+<pre><code>     while (e != null) {
+         Entry&lt;K,V&gt; next = e.next;
+         Object k;
+        if (e.hash == hash &amp;&amp;
+            ((k = e.key) == key || (key != null &amp;&amp; key.equals(k)))) {
+            modCount++;
+            size--;
+            if (prev == e)
+                table[i] = next;
+            else
+                prev.next = next;
+            e.recordRemoval(this);
+            return e;
+        }
+        prev = e;
+        e = next;
+    }
+
+    return e;
+}
+</code></pre><figure class="highlight lua"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">    上面的这个过程就是先找到<span class="built_in">table</span>数组中对应的索引，接着就类似于一般的链表的删除操作，而且是单向链表删除节点，很简单。在C语言中就是修改指针，这个例子中就是将要删除节点的前一节点的<span class="built_in">next</span>指向删除被删除节点的<span class="built_in">next</span>即可。</div><div class="line"></div><div class="line">clear()</div></pre></td></tr></table></figure>
+<p> public void clear() {<br>         modCount++;<br>         Entry[] tab = table;<br>         for (int i = 0; i &lt; tab.length; i++)<br>             tab[i] = null;<br>         size = 0;<br>    }<br><figure class="highlight stylus"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="function"><span class="title">clear</span><span class="params">()</span></span>方法删除HashMap中所有的元素，这里就不用一个个删除节点了，而是直接将table数组内容都置空，这样所有的链表都已经无法访问，Java的垃圾回收机制会去处理这些链表。table数组置空后修改size为<span class="number">0</span>。这里为什么不直接操作table而是通过tab呢？希望有知道的大侠指点一二。主要方法看的差不多了，接着看一个上面提到了好几次但是都搁在一边没有分析的方法：entrySet()。 </div><div class="line"></div><div class="line"><span class="function"><span class="title">entrySet</span><span class="params">()</span></span></div></pre></td></tr></table></figure></p>
+<pre><code>public Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet() {
+ return entrySet0();
+</code></pre><p>   }</p>
+<pre><code>private Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet0() {
+     Set&lt;Map.Entry&lt;K,V&gt;&gt; es = entrySet;
+     return es != null ? es : (entrySet = new EntrySet());
+}
+</code></pre><figure class="highlight groovy"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">为什么会有这样的方法，只是调用了一下entrySet0，而且entrySet0的名称看着就很奇怪。再看entrySet0方法中为什么不直接<span class="keyword">return</span> entrySet!=<span class="literal">null</span>?entrySet:(entrySet = <span class="keyword">new</span> EntrySet)呢？上面的疑问还没解开，但是先看entrySet这个属性吧，在文章开头的属性定义中并没有给出这个属性，下面先看一下它的定义：</div></pre></td></tr></table></figure>
+<p>private transient Set<map.entry<k,v>&gt; entrySet = null;</map.entry<k,v></p>
+<figure class="highlight mathematica"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">它是一个内容为<span class="keyword">Map</span>.Entry&lt;<span class="keyword">K</span>,V&gt;的<span class="keyword">Set</span>。看看在哪些地方往里面添加了元素。 为什么上面的那句话我要把它标成红色？因为这是一个陷阱，在看代码的时候我就陷进去了。仔细看EntrySet这个类。</div></pre></td></tr></table></figure>
+<p>private final class EntrySet extends AbstractSet<map.entry<k,v>&gt; {<br>         public Iterator<map.entry<k,v>&gt; iterator() {<br>             return new EntryIterator();<br>         }<br>         public boolean contains(Object o) {<br>            if (!(o instanceof Map.Entry))<br>                 return false;<br>             Map.Entry<k,v> e = (Map.Entry<k,v>) o;<br>             Entry<k,v> candidate = getEntry(e.getKey());<br>             return candidate != null &amp;&amp; candidate.equals(e);<br>         }<br>         public boolean remove(Object o) {<br>             return removeMapping(o) != null;<br>         }<br>         public int size() {<br>             return size;<br>         }<br>         public void clear() {<br>             HashMap.this.clear();<br>         }<br> }</k,v></k,v></k,v></map.entry<k,v></map.entry<k,v></p>
+<p>```<br>看到了什么？这个类根本就没属性，它只是个代理。因为它内部类，可以访问外部类的内容，debug的时候能看到的属性都是继承或者外部类的属性，输出的时候其实也是调用到了父类的toString方法将HashMap中的内容输出了。</p>
+<pre><code>keySet()
+</code></pre><p>1 public Set<k> keySet() {<br>2         Set<k> ks = keySet;<br>3         return (ks != null ? ks : (keySet = new KeySet()));<br>4     }<br>    是不是和entrySet0()方法很像！</k></k></p>
+<p> 1 private final class KeySet extends AbstractSet<k> {<br> 2         public Iterator<k> iterator() {<br> 3             return newKeyIterator();<br> 4         }<br> 5         public int size() {<br> 6             return size;<br> 7         }<br> 8         public boolean contains(Object o) {<br> 9             return containsKey(o);<br>10         }<br>11         public boolean remove(Object o) {<br>12             return HashMap.this.removeEntryForKey(o) != null;<br>13         }<br>14         public void clear() {<br>15             HashMap.this.clear();<br>16         }<br>17     }<br>复制代码<br>    同样是个代理类，contains、remove、clear方法都是调用的HashMap的方法。 </k></k></p>
+<pre><code>values()
+</code></pre><p> 1 public Collection<v> values() {<br> 2         Collection<v> vs = values;<br> 3         return (vs != null ? vs : (values = new Values()));<br> 4     }<br> 5<br> 6     private final class Values extends AbstractCollection<v> {<br> 7         public Iterator<v> iterator() {<br> 8             return newValueIterator();<br> 9         }<br>10         public int size() {<br>11             return size;<br>12         }<br>13         public boolean contains(Object o) {<br>14             return containsValue(o);<br>15         }<br>16         public void clear() {<br>17             HashMap.this.clear();<br>18         }<br>19     }<br>    values()方法也一样是代理。只是Values类继承自AbstractCollention类，而不是AbstractSet。</v></v></v></v></p>
+<hr>
+<ol>
+<li>HashMap概述：</li>
+</ol>
+<p>　　HashMap是基于哈希表的Map接口的非同步实现（Hashtable跟HashMap很像，唯一的区别是Hashtalbe中的方法是线程安全的，也就是同步的）。此实现提供所有可选的映射操作，并允许使用null值和null键。此类不保证映射的顺序，特别是它不保证该顺序恒久不变。</p>
+<ol>
+<li>HashMap的数据结构：</li>
+</ol>
+<p>　　在java编程语言中，最基本的结构就是两种，一个是数组，另外一个是模拟指针（引用），所有的数据结构都可以用这两个基本结构来构造的，HashMap也不例外。HashMap实际上是一个“链表的数组”的数据结构，每个元素存放链表头结点的数组，即数组和链表的结合体。</p>
+<p>　　从上图中可以看出，HashMap底层就是一个数组结构，数组中的每一项又是一个链表。当新建一个HashMap的时候，就会初始化一个数组。源码如下：</p>
+<p>/**</p>
+<ul>
+<li>The table, resized as necessary. Length MUST Always be a power of two.<br>*/<br>transient Entry[] table;</li>
+</ul>
+<p>static class Entry<k,v> implements Map.Entry<k,v> {<br>    final K key;<br>    V value;<br>    Entry<k,v> next;<br>    final int hash;<br>    ……<br>}<br>　　可以看出，Entry就是数组中的元素，每个 Map.Entry 其实就是一个key-value对，它持有一个指向下一个元素的引用，这就构成了链表。</k,v></k,v></k,v></p>
+<ol>
+<li><p>HashMap的存取实现：</p>
+<p>1) 存储：</p>
+</li>
+</ol>
+<p>public V put(K key, V value) {<br>    // HashMap允许存放null键和null值。<br>    // 当key为null时，调用putForNullKey方法，将value放置在数组第一个位置。<br>    if (key == null)<br>        return putForNullKey(value);<br>    // 根据key的hashCode重新计算hash值。<br>    int hash = hash(key.hashCode());<br>    // 搜索指定hash值所对应table中的索引。<br>    int i = indexFor(hash, table.length);<br>    // 如果 i 索引处的 Entry 不为 null，通过循环不断遍历 e 元素的下一个元素。<br>    for (Entry<k,v> e = table[i]; e != null; e = e.next) {<br>        Object k;<br>        if (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k))) {<br>            V oldValue = e.value;<br>            e.value = value;<br>            e.recordAccess(this);<br>            return oldValue;<br>        }<br>    }<br>    // 如果i索引处的Entry为null，表明此处还没有Entry。<br>    // modCount记录HashMap中修改结构的次数<br>    modCount++;<br>    // 将key、value添加到i索引处。<br>    addEntry(hash, key, value, i);<br>    return null;<br>}<br>　　从上面的源代码中可以看出：当我们往HashMap中put元素的时候，先根据key的hashCode重新计算hash值，根据hash值得到这个元素在数组中的位置（即下标），如果数组该位置上已经存放有其他元素了，那么在这个位置上的元素将以链表的形式存放，新加入的放在链头，最先加入的放在链尾。如果数组该位置上没有元素，就直接将该元素放到此数组中的该位置上。</k,v></p>
+<p>　　addEntry(hash, key, value, i)方法根据计算出的hash值，将key-value对放在数组table的 i 索引处。addEntry 是HashMap 提供的一个包访问权限的方法（就是没有public，protected，private这三个访问权限修饰词修饰，为默认的访问权限，用default表示，但在代码中没有这个default），代码如下：</p>
+<p>void addEntry(int hash, K key, V value, int bucketIndex) {<br>    // 获取指定 bucketIndex 索引处的 Entry<br>    Entry<k,v> e = table[bucketIndex];<br>    // 将新创建的 Entry 放入 bucketIndex 索引处，并让新的 Entry 指向原来的 Entry<br>    table[bucketIndex] = new Entry<k,v>(hash, key, value, e);<br>    // 如果 Map 中的 key-value 对的数量超过了极限<br>    if (size++ &gt;= threshold)<br>    // 把 table 对象的长度扩充到原来的2倍。<br>        resize(2 * table.length);<br>}<br>　　当系统决定存储HashMap中的key-value对时，完全没有考虑Entry中的value，仅仅只是根据key来计算并决定每个Entry的存储位置。我们完全可以把 Map 集合中的 value 当成 key 的附属，当系统决定了 key 的存储位置之后，value 随之保存在那里即可。</k,v></k,v></p>
+<p>　　hash(int h)方法根据key的hashCode重新计算一次散列。此算法加入了高位计算，防止低位不变，高位变化时，造成的hash冲突。</p>
+<p>static int hash(int h) {<br>    h ^= (h &gt;&gt;&gt; 20) ^ (h &gt;&gt;&gt; 12);<br>    return h ^ (h &gt;&gt;&gt; 7) ^ (h &gt;&gt;&gt; 4);<br>}<br>　　我们可以看到在HashMap中要找到某个元素，需要根据key的hash值来求得对应数组中的位置。如何计算这个位置就是hash算法。前面说过HashMap的数据结构是数组和链表的结合，所以我们当然希望这个HashMap里面的 元素位置尽量的分布均匀些，尽量使得每个位置上的元素数量只有一个，那么当我们用hash算法求得这个位置的时候，马上就可以知道对应位置的元素就是我们要的，而不用再去遍历链表，这样就大大优化了查询的效率。</p>
+<p>　　对于任意给定的对象，只要它的 hashCode() 返回值相同，那么程序调用 hash(int h) 方法所计算得到的 hash 码值总是相同的。我们首先想到的就是把hash值对数组长度取模运算，这样一来，元素的分布相对来说是比较均匀的。但是，“模”运算的消耗还是比较大的，在HashMap中是这样做的：调用 indexFor(int h, int length) 方法来计算该对象应该保存在 table 数组的哪个索引处。indexFor(int h, int length) 方法的代码如下：</p>
+<p>static int indexFor(int h, int length) {<br>    return h &amp; (length-1);<br>}<br>　　这个方法非常巧妙，它通过 h &amp; (table.length -1) 来得到该对象的保存位，而HashMap底层数组的长度总是 2 的n 次方，这是HashMap在速度上的优化。在 HashMap 构造器中有如下代码：</p>
+<p>int capacity = 1;<br>    while (capacity &lt; initialCapacity)<br>        capacity &lt;&lt;= 1;<br>　　这段代码保证初始化时HashMap的容量总是2的n次方，即底层数组的长度总是为2的n次方。</p>
+<p>　　当length总是 2 的n次方时，h&amp; (length-1)运算等价于对length取模，也就是h%length，但是&amp;比%具有更高的效率。</p>
+<p>　　这看上去很简单，其实比较有玄机的，我们举个例子来说明：</p>
+<p>　　假设数组长度分别为15和16，优化后的hash码分别为8和9，那么&amp;运算后的结果如下：</p>
+<pre><code> h &amp; (table.length-1)                     hash                             table.length-1
+
+ 8 &amp; (15-1)：                                 0100                   &amp;              1110                   =                0100
+
+ 9 &amp; (15-1)：                                 0101                   &amp;              1110                   =                0100
+
+-----------------------------------------------------------------------------------------------------------------------
+
+ 8 &amp; (16-1)：                                 0100                   &amp;              1111                   =                0100
+
+ 9 &amp; (16-1)：                                 0101                   &amp;              1111                   =                0101
+
+-----------------------------------------------------------------------------------------------------------------------
+</code></pre><p>　　从上面的例子中可以看出：当8、9两个数和(15-1)2=(1110)进行“与运算&amp;”的时候，产生了相同的结果，都为0100，也就是说它们会定位到数组中的同一个位置上去，这就产生了碰撞，8和9会被放到数组中的同一个位置上形成链表，那么查询的时候就需要遍历这个链 表，得到8或者9，这样就降低了查询的效率。同时，我们也可以发现，当数组长度为15的时候，hash值会与(15-1)2=(1110)进行“与运算&amp;”，那么最后一位永远是0，而0001，0011，0101，1001，1011，0111，1101这几个位置永远都不能存放元素了，空间浪费相当大，更糟的是这种情况中，数组可以使用的位置比数组长度小了很多，这意味着进一步增加了碰撞的几率，减慢了查询的效率！</p>
+<p>　　而当数组长度为16时，即为2的n次方时，2n-1得到的二进制数的每个位上的值都为1（比如(24-1)2=1111），这使得在低位上&amp;时，得到的和原hash的低位相同，加之hash(int h)方法对key的hashCode的进一步优化，加入了高位计算，就使得只有相同的hash值的两个值才会被放到数组中的同一个位置上形成链表。</p>
+<p>　　所以说，当数组长度为2的n次幂的时候，不同的key算得得index相同的几率较小，那么数据在数组上分布就比较均匀，也就是说碰撞的几率小，相对的，查询的时候就不用遍历某个位置上的链表，这样查询效率也就较高了。</p>
+<p>　　根据上面 put 方法的源代码可以看出，当程序试图将一个key-value对放入HashMap中时，程序首先根据该 key的 hashCode() 返回值决定该 Entry 的存储位置：如果两个 Entry 的 key 的 hashCode() 返回值相同，那它们的存储位置相同。如果这两个 Entry 的 key 通过 equals 比较返回 true，新添加 Entry 的 value 将覆盖集合中原有Entry 的 value，但key不会覆盖。如果这两个 Entry 的 key 通过 equals 比较返回 false，新添加的 Entry 将与集合中原有 Entry 形成 Entry 链，而且新添加的 Entry 位于 Entry 链的头部——具体说明继续看 addEntry() 方法的说明。</p>
+<p>  2) 读取：</p>
+<p>public V get(Object key) {<br>    if (key == null)<br>        return getForNullKey();<br>    int hash = hash(key.hashCode());<br>    for (Entry<k,v> e = table[indexFor(hash, table.length)];<br>        e != null;<br>        e = e.next) {<br>        Object k;<br>        if (e.hash == hash &amp;&amp; ((k = e.key) == key || key.equals(k)))<br>            return e.value;<br>    }<br>    return null;<br>}<br>　　有了上面存储时的hash算法作为基础，理解起来这段代码就很容易了。从上面的源代码中可以看出：从HashMap中get元素时，首先计算key的hashCode，找到数组中对应位置的某一元素，然后通过key的equals方法在对应位置的链表中找到需要的元素。</k,v></p>
+<p>  3) 归纳起来简单地说，HashMap 在底层将 key-value 当成一个整体进行处理，这个整体就是一个 Entry 对象。HashMap 底层采用一个 Entry[] 数组来保存所有的 key-value 对，当需要存储一个 Entry 对象时，会根据hash算法来决定其在数组中的存储位置，在根据equals方法决定其在该数组位置上的链表中的存储位置；当需要取出一个Entry时，也会根据hash算法找到其在数组中的存储位置，再根据equals方法从该位置上的链表中取出该Entry。</p>
+<ol>
+<li>HashMap的resize（rehash）：</li>
+</ol>
+<p>　　当HashMap中的元素越来越多的时候，hash冲突的几率也就越来越高，因为数组的长度是固定的。所以为了提高查询的效率，就要对HashMap的数组进行扩容，数组扩容这个操作也会出现在ArrayList中，这是一个常用的操作，而在HashMap数组扩容之后，最消耗性能的点就出现了：原数组中的数据必须重新计算其在新数组中的位置，并放进去，这就是resize。</p>
+<p>　　那么HashMap什么时候进行扩容呢？当HashMap中的元素个数超过数组大小<em>loadFactor时，就会进行数组扩容，loadFactor的默认值为0.75，这是一个折中的取值。也就是说，默认情况下，数组大小为16，那么当HashMap中元素个数超过16</em>0.75=12（这个值就是代码中的threshold值，也叫做临界值）的时候，就把数组的大小扩展为 2*16=32，即扩大一倍，然后重新计算每个元素在数组中的位置，而这是一个非常消耗性能的操作，所以如果我们已经预知HashMap中元素的个数，那么预设元素的个数能够有效的提高HashMap的性能。</p>
+<p>HashMap扩容的代码如下所示：</p>
+<p>//HashMap数组扩容<br>          void resize(int newCapacity) {<br>                Entry[] oldTable = table;<br>                int oldCapacity = oldTable.length;<br>                //如果当前的数组长度已经达到最大值，则不在进行调整<br>                if (oldCapacity == MAXIMUM_CAPACITY) {<br>                    threshold = Integer.MAX_VALUE;<br>                    return;<br>                }<br>                //根据传入参数的长度定义新的数组<br>                Entry[] newTable = new Entry[newCapacity];<br>                //按照新的规则，将旧数组中的元素转移到新数组中<br>                transfer(newTable);<br>                table = newTable;<br>                //更新临界值<br>                threshold = (int)(newCapacity * loadFactor);<br>            }</p>
+<pre><code>//旧数组中元素往新数组中迁移
+  void transfer(Entry[] newTable) {
+      //旧数组
+      Entry[] src = table;
+      //新数组长度
+      int newCapacity = newTable.length;
+      //遍历旧数组
+      for (int j = 0; j &lt; src.length; j++) {
+          Entry&lt;K,V&gt; e = src[j];
+          if (e != null) {
+              src[j] = null;
+              do {
+                  Entry&lt;K,V&gt; next = e.next;
+                  int i = indexFor(e.hash, newCapacity);
+                  e.next = newTable[i];
+                  newTable[i] = e;
+                  e = next;
+              } while (e != null);
+          }
+      }
+  }
+</code></pre><p>5.HashMap的性能参数：</p>
+<p>HashMap 包含如下几个构造器：</p>
+<p>   HashMap()：构建一个初始容量为 16，负载因子为 0.75 的 HashMap。<br>   HashMap(int initialCapacity)：构建一个初始容量为 initialCapacity，负载因子为 0.75 的 HashMap。<br>   HashMap(int initialCapacity, float loadFactor)：以指定初始容量、指定的负载因子创建一个 HashMap。    initialCapacity：HashMap的最大容量，即为底层数组的长度。 loadFactor：负载因子loadFactor定义为：散列表的实际元素数目(n)/ 散列表的容量(m)。<br>　　负载因子衡量的是一个散列表的空间的使用程度，负载因子越大表示散列表的装填程度越高，反之愈小。对于使用链表法的散列表来说，查找一个元素的平均时间是O(1+a)，因此如果负载因子越大，对空间的利用更充分，然而后果是查找效率的降低；如果负载因子太小，那么散列表的数据将过于稀疏，对空间造成严重浪费。</p>
+<p>　　HashMap的实现中，通过threshold字段来判断HashMap的最大容量：</p>
+<p>threshold = (int)(capacity * loadFactor);<br>　　结合负载因子的定义公式可知，threshold就是在此loadFactor和capacity对应下允许的最大元素数目，超过这个数目就重新resize，以降低实际的负载因子（也就是说虽然数组长度是capacity，但其扩容的临界值确是threshold）。默认的的负载因子0.75是对空间和时间效率的一个平衡选择。当容量超出此最大容量时， resize后的HashMap容量是容量的两倍：</p>
+<p>if (size++ &gt;= threshold)<br>    resize(2 * table.length);<br>6.Fail-Fast机制：</p>
+<p>　　我们知道java.util.HashMap不是线程安全的，因此如果在使用迭代器的过程中有其他线程修改了map，那么将抛出ConcurrentModificationException，这就是所谓fail-fast策略。（这个在core java这本书中也有提到。）</p>
+<p>　　这一策略在源码中的实现是通过modCount域，modCount顾名思义就是修改次数，对HashMap内容的修改都将增加这个值，那么在迭代器初始化过程中会将这个值赋给迭代器的expectedModCount。</p>
+<p>HashIterator() {<br>    expectedModCount = modCount;<br>    if (size &gt; 0) { // advance to first entry<br>    Entry[] t = table;<br>    while (index &lt; t.length &amp;&amp; (next = t[index++]) == null)<br>        ;<br>    }<br>}<br>　　在迭代过程中，判断modCount跟expectedModCount是否相等，如果不相等就表示已经有其他线程修改了Map：</p>
+<p>　　注意到modCount声明为volatile，保证线程之间修改的可见性。</p>
+<pre><code>（volatile之所以线程安全是因为被volatile修饰的变量不保存缓存，直接在内存中修改，因此能够保证线程之间修改的可见性）。
+</code></pre><p>final Entry<k,v> nextEntry() {<br>    if (modCount != expectedModCount)<br>        throw new ConcurrentModificationException();<br>在HashMap的API中指出：</k,v></p>
+<p>　　由所有HashMap类的“collection 视图方法”所返回的迭代器都是快速失败的：在迭代器创建之后，如果从结构上对映射进行修改，除非通过迭代器本身的 remove 方法，其他任何时间任何方式的修改，迭代器都将抛出ConcurrentModificationException。因此，面对并发的修改，迭代器很快就会完全失败，而不保证在将来不确定的时间发生任意不确定行为的风险。</p>
+<p>　　注意，迭代器的快速失败行为不能得到保证，一般来说，存在非同步的并发修改时，不可能作出任何坚决的保证。快速失败迭代器尽最大努力抛出 ConcurrentModificationException。因此，编写依赖于此异常的程序的做法是错误的，正确做法是：迭代器的快速失败行为应该仅用于检测程序错误。</p>
+
 
                 <hr>
 

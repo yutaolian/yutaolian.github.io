@@ -101,14 +101,14 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
+                            <a href="/archives/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archives/">Archives</a>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -195,6 +195,27 @@
 
 <div class="post-preview">
 
+    <a href="/2016/11/16/深入理解Java虚拟机-二/">
+        <h2 class="post-title">
+            深入理解Java虚拟机(二)
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lian YuTao on
+        2016-11-16
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2016/10/28/使用一台Nginx对多台Tomcat实现负载均衡/">
         <h2 class="post-title">
             使用一台Nginx对多台Tomcat实现负载均衡
@@ -266,6 +287,29 @@ val声明一个final的变量 可以做简单类型推导可参考
 
 <div class="post-preview">
 
+    <a href="/2016/09/26/《深入理解Java虚拟机》读书笔记（二）/">
+        <h2 class="post-title">
+            《深入理解Java虚拟机》读书笔记（二）
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            0.垃圾回收程序计数器、虚拟机栈、本地方法栈3个区域随线程而生，随线程而灭，在这几个区域内就不需要过多考虑回收的问题，因为方法结束或者线程结束时，内存自然就跟随着回收了
+1.判断对象存活1.1.1 引用计数器法给对象添加一个引用计数器，每当由一个地方引用它时，计数器值就加1；当引用失效时，计数器值就减1；任何时刻计数器为0的对象就是不可能再被使用的
+1.1.2 可达性分析算法通过一系列的成为......
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Lian YuTao on
+        2016-09-26
+    </p>
+
+</div>
+<hr>
+
+<div class="post-preview">
+
     <a href="/2016/09/25/《深入理解Java虚拟机》读书笔记-一/">
         <h2 class="post-title">
             《深入理解Java虚拟机》读书笔记-(一)
@@ -274,7 +318,8 @@ val声明一个final的变量 可以做简单类型推导可参考
             
         </h3>
         <div class="post-content-preview">
-            0.简介...
+            0.Java内存区域一、运行时数据区域Java虚拟机管理的内存包括几个运行时数据内存：方法区、虚拟机栈、本地方法栈、堆、程序计数器，其中方法区和堆是由线程共享的数据区，其他几个是线程隔离的数据区
+1.1 程序计数器程序计数器是一块较小的内存，他可以看做是当前线程所执行的行号指示器。字节码解释器工作的时候就是通过改变这个计数器的值来选取下一条需要执行的字节码的指令，分支、循环、跳转、异常处理、......
         </div>
     </a>
     <p class="post-meta">
@@ -381,56 +426,6 @@ val声明一个final的变量 可以做简单类型推导可参考
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2016/09/02/Java源码分析-三-HashSet/">
-        <h2 class="post-title">
-            Java源码分析(三)-HashSet
-        </h2>
-        <h3 class="post-subtitle">
-            Keynote: JavaScript Modularization Journey
-        </h3>
-        <div class="post-content-preview">
-            @(示例笔记本)[马克飞象|帮助|Markdown]
-马克飞象是一款专为印象笔记（Evernote）打造的Markdown编辑器，通过精心的设计与技术实现，配合印象笔记强大的存储和同步功能，带来前所未有的书写体验。特点概述：
-
-功能丰富 ：支持高亮代码块、LaTeX 公式、流程图，本地图片以及附件上传，甚至截图粘贴，工作学习好帮手；
-得心应手 ：简洁高效的编辑器，提供[桌面客户端][1]以及......
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lian YuTao on
-        2016-09-02
-    </p>
-
-</div>
-<hr>
-
-<div class="post-preview">
-
-    <a href="/2016/09/02/Java源码分析-二-ArrayList/">
-        <h2 class="post-title">
-            Java源码分析(二)-ArrayList
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            123ewrwrwrwer
-123werwerwer
-2131312werwerw
-123123werwerw
-12312123231232...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Lian YuTao on
-        2016-09-02
-    </p>
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -466,13 +461,17 @@ val声明一个final的变量 可以做简单类型推导可参考
                     <div class="tags">
                         
                             
-                            <a href="/tags/#Java" title="Java" rel="6">Java</a>
+                            <a href="/tags/#Java" title="Java" rel="7">Java</a>
                             
                         
                             
                         
                             
                         
+                            
+                        
+                            
+                            <a href="/tags/#iOS" title="iOS" rel="3">iOS</a>
                             
                         
                             
@@ -481,8 +480,6 @@ val声明一个final的变量 可以做简单类型推导可参考
                         
                             
                         
-                            
-                            <a href="/tags/#iOS" title="iOS" rel="3">iOS</a>
                             
                         
                             
